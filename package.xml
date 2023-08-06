@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package>
+  <name>a_gpt_robot</name>
+  <version>0.0.1</version>
+  <description>a gpt-powered robot control package</description>
+
+  <maintainer email="lqiangecnu@gmail.com">Qiang Liu</maintainer>
+
+  <license>BSD</license>
+
+
+
+</package>

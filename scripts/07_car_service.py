@@ -8,6 +8,7 @@ from yahboomcar_msgs.msg import ArmJoint
 from time import sleep
 from yahboomcar_msgs.srv import RobotArmArray, RobotArmArrayRequest
 from std_srvs.srv import Trigger, TriggerResponse
+from utils import publish_joints, get_current_angles
 
 position_dict = {
     "initial position": [90, 145, 0, 45, 90],
@@ -23,21 +24,6 @@ position_dict = {
 }
 
 
-def get_current_angles():
-    curr_angle = rospy.ServiceProxy("CurrentAngle", RobotArmArray)
-    request = RobotArmArrayRequest()
-    response = curr_angle.call(request)
-    return list(response.angles)
-
-
-def publish_joints(joints):
-    joints_pub = rospy.Publisher("TargetAngle", ArmJoint, queue_size=1000)
-    arm_joint = ArmJoint()
-    arm_joint.run_time = 5000
-    arm_joint.joints = joints
-    for i in range(10):
-        joints_pub.publish(arm_joint)
-        sleep(0.1)
 
 
 def handle_go_to_position(position_msg):

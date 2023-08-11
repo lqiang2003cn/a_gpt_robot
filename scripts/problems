@@ -24,14 +24,14 @@ goal:
       frame_id: 'map'
     pose:
       position:
-        x: 1.4565
-        y: 0.85088
+        x: 0.0
+        y: 0.0
         z: 0.0
       orientation:
         x: 0.0
         y: 0.0
-        z: 0.40523
-        w: 0.91422
+        z: 0.0
+        w: 1
 " -1
 
 

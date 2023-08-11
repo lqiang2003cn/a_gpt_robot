@@ -1,0 +1,103 @@
+kitchen stop spot: position: (1.4565; 0.85088; 0) orientation: (0; 0; 0.40523; 0.91422)
+living room spot: position: (0.30723; -0.2202; 0) orientation: (0; 0; 0.92674; -0.37571)
+
+********************************* kitchen stop spot *********************************
+rostopic pub /move_base/goal move_base_msgs/MoveBaseActionGoal "
+header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: 'map'
+goal_id:
+  stamp:
+    secs: 0
+    nsecs: 0
+  id: ''
+goal:
+  target_pose:
+    header:
+      seq: 0
+      stamp:
+        secs: 0
+        nsecs: 0
+      frame_id: 'map'
+    pose:
+      position:
+        x: 1.4565
+        y: 0.85088
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.40523
+        w: 0.91422
+" -1
+
+
+rostopic pub /cmd_vel geometry_msgs/Twist -r 10 -- '[0.0, 0.0, 0.0]' '[0.0, 0.0, -0.9]' -1
+rostopic pub /cmd_vel geometry_msgs/Twist '[0.0, 0.0, 0.0]' '[0.0, 0.0, 0.0]' -1
+
+********************************* living room spot *********************************
+rostopic pub /move_base/goal move_base_msgs/MoveBaseActionGoal "
+header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: 'map'
+goal_id:
+  stamp:
+    secs: 0
+    nsecs: 0
+  id: ''
+goal:
+  target_pose:
+    header:
+      seq: 0
+      stamp:
+        secs: 0
+        nsecs: 0
+      frame_id: 'map'
+    pose:
+      position:
+        x: 0.30723
+        y: -0.2202
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.92674
+        w: -0.37571
+" -1
+
+
+# commands
+roslaunch yahboomcar_bringup bringup.launch
+roslaunch arm_moveit_demo x3plus_moveit_demo.launch sim:=false
+roslaunch yahboomcar_visual ar_track.launch
+rosrun arm_moveit_demo 02_set_pose_plan.py
+rosrun arm_moveit_demo 03_set_joint_plan.py
+rosrun arm_moveit_demo 03_set_joint_plan.py
+
+# configure command
+roscore
+rosrun moveit_setup_assistant moveit_setup_assistant
+
+# moveit configuration
+yahboomcar_ws/src/x3plus_moveit_config
+
+
+# check usb cam devices
+sudo apt-get install v4l-utils
+v4l2-ctl --list-devices
+
+# grip position
+-0.0013831874404906486, 0.4816744319591376, -1.5528096898491415, -0.4440411450458266, -0.0029346378005447164
+
+# inspect position
+0.0034308343797855184, 0.4328600802900121, -0.5747812018532749, -1.3807770705896414, 0.0034030842381248833
+
+# current joint state
+0.0, 0.5235987755982988, -1.5707963267948966, -1.5707963267948966, 0.0, -1.5707963267948966
+

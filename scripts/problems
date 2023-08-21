@@ -1,3 +1,41 @@
+********************************* living room table stop spot *********************************
+position: 3.2508; -3.0153; 0
+orientation: 0; 0; 0.0074124; 0.99997
+
+rostopic pub /move_base/goal move_base_msgs/MoveBaseActionGoal "
+header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: 'map'
+goal_id:
+  stamp:
+    secs: 0
+    nsecs: 0
+  id: ''
+goal:
+  target_pose:
+    header:
+      seq: 0
+      stamp:
+        secs: 0
+        nsecs: 0
+      frame_id: 'map'
+    pose:
+      position:
+        x: 3.2508
+        y: -3.0153
+        z: 0.0
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0074124
+        w: 0.99997
+" -1
+
+
+
 roslaunch yahboomcar_nav laser_astrapro_bringup.launch
 roslaunch yahboomcar_nav yahboomcar_navigation.launch use_rviz:=true map:=my_map
 
@@ -23,8 +61,6 @@ kitchen stop spot: position: (1.4565; 0.85088; 0) orientation: (0; 0; 0.40523; 0
 living room spot: position: (0.30723; -0.2202; 0) orientation: (0; 0; 0.92674; -0.37571)
 
 ********************************* near position: kitchen stop spot *********************************
-
-
 rostopic pub /move_base/goal move_base_msgs/MoveBaseActionGoal "
 header:
   seq: 0

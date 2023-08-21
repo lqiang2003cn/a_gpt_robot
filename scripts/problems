@@ -1,6 +1,34 @@
+roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true end_effector:=pal-gripper world:=tutorial_office gzpose:="-x -3.5 -y -0.85 -z 0 -R 0 -P 0 -Y -3.0"
+
 ********************************* living room table stop spot *********************************
-position: 3.2508; -3.0153; 0
-orientation: 0; 0; 0.0074124; 0.99997
+# actual tube position: 4.2 -3 0.8625 0 -1.57 0
+# detected tube position: 4.366; -2.9525; 0.77785, 0.0096755; -0.73688; 0.003365; 0.67594
+# create the actual_tube frame
+rosrun tf static_transform_publisher 4.2 -3 0.8625 0 -1.57 0 map actual_tube 100
+# get transform between aruco_frame and actual_tube
+rosrun tf tf_echo aruco_frame actual_tube 1
+# result of the command: 0.093, -0.071, 0.147, -0.008, 0.039, 0.002, 0.999
+
+# actual tube position: 4 -2.7 0.8625 0 -1.57 0
+# detected tube position: 4.2313; -2.6735; 0.77149, 0.015078; -0.73702; -0.00036763; 0.6757
+# create the actual_tube frame
+rosrun tf static_transform_publisher 4 -2.7 0.8625 0 -1.57 0 map actual_tube 100
+# get transform between aruco_frame and actual_tube
+rosrun tf tf_echo aruco_frame actual_tube 1
+# result of the command: -0.074, 0.065, 0.245, -0.182, -0.320, -0.002, 0.930
+
+
+# get the relative transform between aruco_frame and base_footprint command line:
+rosrun tf tf_echo aruco_frame base_footprint 1
+# result of the command: -0.680, -0.027, 1.421, -0.030, 0.733, -0.024, 0.679
+
+# get the base_footprint from transform and aruco_frame
+rosrun tf static_transform_publisher -0.680, -0.027, 1.421, -0.030, 0.733, -0.024, 0.679 aruco_frame robot 100
+
+# relative position: 1.3776; 0.13063; 0.7805
+# relative orientation: 0.042341; -0.72953; 0.029215; 0.68201
+
+# actual position of
 
 rostopic pub /move_base/goal move_base_msgs/MoveBaseActionGoal "
 header:
@@ -24,7 +52,7 @@ goal:
       frame_id: 'map'
     pose:
       position:
-        x: 3.2508
+        x: 2.6
         y: -3.0153
         z: 0.0
       orientation:
@@ -47,7 +75,6 @@ rosrun tf static_transform_publisher 0.40699462750063725, -0.048221202303060574,
 
 # start position: [89.0, 170.0, 0.0, 9.0, 89.0, 30.0]
 # aruco relative to base_footprint: [0.17781224464945294, 0.006941691698272469, 0.3532328260485559]
-
 rosrun tf static_transform_publisher -0.013567295309763543, -0.0057125228895763104, 0.0, 0.0, 0.0, 0.5043486662043798, 0.8635001001145646 odom robot 100
 rosrun tf static_transform_publisher -0.024650095450441636, 0.35653008451373436, 0.16604394694192526, -0.5181176534257725, -0.4644580354911908, 0.4813045878521248, -0.5330841623878275 ar_marker robot 100
 

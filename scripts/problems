@@ -1,5 +1,30 @@
 roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true end_effector:=pal-gripper world:=tutorial_office gzpose:="-x -3.5 -y -0.85 -z 0 -R 0 -P 0 -Y -3.0"
 
+rostopic pub /gripper_left_controller/command trajectory_msgs/JointTrajectory "
+header:
+    seq: 0
+    stamp:
+        secs: 0
+        nsecs: 0
+    frame_id: ''
+joint_names: ['gripper_left_left_finger_joint', 'gripper_left_right_finger_joint']
+points:
+  positions: [0.04, 0.01]
+    velocities: []
+    accelerations: []
+    effort: []
+    time_from_start:
+        secs: 1
+        nsecs: 0"
+
+
+arm_link_7:
+    position: 3.5836; -2.722; 0.31194
+    orientation: -0.0053417; 0.0032312; -0.69324; 0.72068
+
+
+git clone https://github.com/lqiang2003cn/moveit_tutorials -b melodic-devel
+
 ********************************* living room table stop spot *********************************
 # actual tube position: 4.2 -3 0.8625 0 -1.57 0
 # detected tube position: 4.366; -2.9525; 0.77785, 0.0096755; -0.73688; 0.003365; 0.67594
@@ -28,8 +53,7 @@ rosrun tf static_transform_publisher -0.680, -0.027, 1.421, -0.030, 0.733, -0.02
 # relative position: 1.3776; 0.13063; 0.7805
 # relative orientation: 0.042341; -0.72953; 0.029215; 0.68201
 
-# actual position of
-
+# go to a stop position
 rostopic pub /move_base/goal move_base_msgs/MoveBaseActionGoal "
 header:
   seq: 0
@@ -52,7 +76,7 @@ goal:
       frame_id: 'map'
     pose:
       position:
-        x: 2.6
+        x: 3.2
         y: -3.0153
         z: 0.0
       orientation:

@@ -24,8 +24,6 @@ position_dict = {
 }
 
 
-
-
 def handle_go_to_position(position_msg):
     print("Going to position:", position_msg.position)
     try:

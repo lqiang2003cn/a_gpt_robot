@@ -55,7 +55,6 @@ if __name__ == "__main__":
         "gripper_status": "open",
         "object_pos": "left lower position",
         "instruction": "pick up the object and place it to the right lower position."
-        # "instruction": "go to the initial position"
     }
     call_gpt(input_json)
 

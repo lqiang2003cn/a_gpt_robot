@@ -20,7 +20,7 @@ pose_dict = {
     "orange pose": {
         "frame_id": "base_footprint",
         "position": [0.4, 0.3, 0.3],
-        "orientation": quaternion_from_euler(-0.011, 1.57, 0.037)
+        "orientation": quaternion_from_euler(1.57, 0, 0)
     },
 }
 

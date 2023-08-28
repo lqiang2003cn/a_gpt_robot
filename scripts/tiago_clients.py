@@ -17,7 +17,7 @@ def call_service_func(sn, args):
         resp = services[sn].call(req)
         rospy.sleep(2)
         return resp
-    except rospy.ServiceException as e:
+    except Exception as e:
         print("Service call failed: %s" % e)
 
 
@@ -25,4 +25,15 @@ if __name__ == "__main__":
     arg = {
         "pose_str": "stock room table1"
     }
-    call_service_func("move_to_pose", arg)
+    call_service_func("move_base_to_pose", arg)
+
+    arg = {
+        "pose_str": "orange pose"
+    }
+    call_service_func("move_arm_to_pose", arg)
+
+    arg = {}
+    call_service_func("close_gripper", arg)
+
+    arg = {}
+    call_service_func("open_gripper", arg)

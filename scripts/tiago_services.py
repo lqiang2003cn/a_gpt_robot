@@ -11,14 +11,43 @@ from a_gpt_robot.srv import MovePose, MovePoseResponse
 from std_srvs.srv import Trigger, Empty
 from tf.transformations import quaternion_from_euler
 
+office_room_table_111_x = 4.2
+office_room_table_111_y = -3
+
+office_room_table_26_x = -4.2
+office_room_table_26_y = -3
+
+office_room_table_63_x = -4.2
+office_room_table_63_y = 3
+
+office_room_table_238_x = 4.2
+office_room_table_238_y = 3
+
+table_x_diff = 1.1
+
 pose_dict = {
-    "stock room table1": {
+    "stock room table 111": {
         "frame_id": "map",
-        "position": [1, 1, 0],
+        "position": [office_room_table_111_x - table_x_diff, office_room_table_111_y, 0],
+        "orientation": [0, 0, 0, 1]
+    },
+    "stock room table 26": {
+        "frame_id": "map",
+        "position": [office_room_table_26_x + table_x_diff, office_room_table_26_y, 0],
+        "orientation": [0, 0, 1, 0]
+    },
+    "stock room table 63": {
+        "frame_id": "map",
+        "position": [office_room_table_63_x + table_x_diff, office_room_table_63_y, 0],
+        "orientation": [0, 0, 1, 0]
+    },
+    "stock room table 238": {
+        "frame_id": "map",
+        "position": [office_room_table_238_x - table_x_diff, office_room_table_238_y, 0],
         "orientation": [0, 0, 0, 1]
     },
     "orange pose": {
-        "frame_id": "base_footprint",
+        "frame_id": "map",
         "position": [0.4, 0.3, 0.3],
         "orientation": quaternion_from_euler(1.57, 0, 0)
     },

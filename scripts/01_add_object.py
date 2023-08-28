@@ -239,7 +239,7 @@ class MoveGroupPythonInterfaceTutorial(object):
         goal.target_pose.header.frame_id = "map"
         goal.target_pose.header.stamp = rospy.Time.now()
         goal.target_pose.pose.position.x = 3.2
-        goal.target_pose.pose.position.y = -3.0153
+        goal.target_pose.pose.position.y = -3
         goal.target_pose.pose.orientation.x = 0.0
         goal.target_pose.pose.orientation.y = 0.0
         goal.target_pose.pose.orientation.z = 0.0
@@ -248,6 +248,9 @@ class MoveGroupPythonInterfaceTutorial(object):
         client.send_goal(goal)
         client.wait_for_result()
 
+
+table_x = 4.2
+table_y = -3
 
 box_x = 4
 box_y = -2.8

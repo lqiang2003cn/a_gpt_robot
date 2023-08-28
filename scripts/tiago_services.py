@@ -23,28 +23,36 @@ office_room_table_63_y = 3
 office_room_table_238_x = 4.2
 office_room_table_238_y = 3
 
+stock_room_table_333_x = -4
+stock_room_table_333_y = 8
+
 table_x_diff = 1.1
 
 pose_dict = {
-    "stock room table 111": {
+    "office room table 111": {
         "frame_id": "map",
         "position": [office_room_table_111_x - table_x_diff, office_room_table_111_y, 0],
         "orientation": [0, 0, 0, 1]
     },
-    "stock room table 26": {
+    "office room table 26": {
         "frame_id": "map",
         "position": [office_room_table_26_x + table_x_diff, office_room_table_26_y, 0],
         "orientation": [0, 0, 1, 0]
     },
-    "stock room table 63": {
+    "office room table 63": {
         "frame_id": "map",
         "position": [office_room_table_63_x + table_x_diff, office_room_table_63_y, 0],
         "orientation": [0, 0, 1, 0]
     },
-    "stock room table 238": {
+    "office room table 238": {
         "frame_id": "map",
         "position": [office_room_table_238_x - table_x_diff, office_room_table_238_y, 0],
         "orientation": [0, 0, 0, 1]
+    },
+    "stock room table 333": {
+        "frame_id": "map",
+        "position": [stock_room_table_333_x + table_x_diff, stock_room_table_333_y, 0],
+        "orientation": [0, 0, 1, 0]
     },
     "orange pose": {
         "frame_id": "map",

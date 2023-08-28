@@ -25,7 +25,7 @@ def call_service_func(sn, args):
 
 if __name__ == "__main__":
     arg = {
-        "pose_str": "stock room table 26"
+        "pose_str": "stock room table 333"
     }
     call_service_func("move_base_to_pose", arg)
 

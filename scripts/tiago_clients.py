@@ -15,7 +15,7 @@ def call_service_func(sn, args):
             services[sn] = roslibpy.Service(ros_client, sn, ros_client.get_service_type(sn))
         req = roslibpy.ServiceRequest(args)
         resp = services[sn].call(req)
-        rospy.sleep(1.5)
+        rospy.sleep(2)
         return resp
     except rospy.ServiceException as e:
         print("Service call failed: %s" % e)

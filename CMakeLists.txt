@@ -4,7 +4,21 @@ project(a_gpt_robot)
 find_package(OpenCV REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    rospy
+    std_msgs
+    message_generation
     aruco
+)
+
+add_service_files(
+    FILES
+    MovePose.srv
+)
+
+generate_messages(
+    DEPENDENCIES
+    std_msgs
 )
 
 catkin_package(

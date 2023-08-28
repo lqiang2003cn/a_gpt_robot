@@ -1,21 +1,21 @@
 import actionlib
 import rospy
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from std_srvs.srv import Empty
+from a_gpt_robot.srv import MovePose, MovePoseResponse
 
 pose_dict = {
     "stock room table1": {
-        "position": [1, 1, 1],
+        "position": [1, 1, 0],
         "orientation": [0, 0, 0, 1]
     }
 }
 
 
-def move_to_pose(pose_str):
+def move_to_pose(srv_request):
     client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
     client.wait_for_server()
 
-    pose = pose_dict[pose_str]
+    pose = pose_dict[srv_request.pose_str]
 
     goal = MoveBaseGoal()
     goal.target_pose.header.frame_id = "map"
@@ -29,11 +29,12 @@ def move_to_pose(pose_str):
 
     client.send_goal(goal)
     client.wait_for_result()
+    return MovePoseResponse(1)
 
 
 def create_tiago_services():
     rospy.init_node('create_tiago_services')
-    rospy.Service('move_to_pose', Empty, move_to_pose)
+    rospy.Service('move_to_pose', MovePose, move_to_pose)
     print "tiago services are ready"
     rospy.spin()
 

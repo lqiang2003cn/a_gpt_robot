@@ -1,4 +1,21 @@
 roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true end_effector:=pal-gripper world:=tutorial_office gzpose:="-x -3.5 -y -0.85 -z 0 -R 0 -P 0 -Y -3.0"
+rosrun tf static_transform_publisher -3.800000 8.000018 0.839077 0 0 0 1 map tube_frame 100
+rosrun tf static_transform_publisher 0 0 0.2 0 0 0 1 tube_frame tube_pre_pick 100
+rosrun tf static_transform_publisher 0.05 0 0 0 0 0 1 gripper_left_grasping_frame gripper_center 100
+rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 gripper_center arm_left_tool_link_cal 100
+rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 tube_pre_pick arm_left_tool_link_cal 100
+
+rosrun tf static_transform_publisher 0 0 0 0. 1. 0. 0. tube_pre_pick tube_turned 100
+rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 tube_turned tube_trans 100
+
+
+rosrun tf tf_echo tube_pre_pick arm_left_tool_link 1
+- Translation: [-0.201, 0.000, 0.000]
+- Rotation: in Quaternion [-0.707, -0.000, -0.000, 0.707]
+            in RPY (radian) [-1.571, -0.000, -0.000]
+            in RPY (degree) [-90.006, -0.000, -0.000]
+
+
 
 rostopic pub /gripper_left_controller/command trajectory_msgs/JointTrajectory "
 header:

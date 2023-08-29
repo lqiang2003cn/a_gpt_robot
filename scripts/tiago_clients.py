@@ -30,7 +30,7 @@ if __name__ == "__main__":
     call_service_func("move_base_to_pose", arg)
 
     # arg = {
-    #     "pose_str": "orange pose"
+    #     "pose_str": "orange tool pose"
     # }
     # call_service_func("move_arm_to_pose", arg)
     #

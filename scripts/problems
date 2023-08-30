@@ -13,14 +13,16 @@ rosrun a_gpt_robot tiago_clients.py
 rosrun tf static_transform_publisher -3.800000 8.000018 0.839077 0 0 0 1 map tube_frame 100
 rosrun tf static_transform_publisher 0 0 0.2 0 0 0 1 tube_frame tube_pre_pick 100
 rosrun tf static_transform_publisher 0.05 0 0 0 0 0 1 gripper_left_grasping_frame gripper_center 100
-rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 gripper_center arm_left_tool_link_cal 100
+
 rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 tube_pre_pick arm_left_tool_link_cal 100
+rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 gripper_center arm_left_tool_link_cal 100
+
 
 rosrun tf static_transform_publisher 0 0 0 0. 1. 0. 0. tube_pre_pick tube_turned 100
 rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 tube_turned tube_trans 100
 
 
-rosrun tf tf_echo tube_pre_pick arm_left_tool_link 1
+rosrun tf tf_echo gripper_center arm_left_tool_link 1
 - Translation: [-0.201, 0.000, 0.000]
 - Rotation: in Quaternion [-0.707, -0.000, -0.000, 0.707]
             in RPY (radian) [-1.571, -0.000, -0.000]

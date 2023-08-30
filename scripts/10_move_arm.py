@@ -31,17 +31,17 @@ if __name__ == "__main__":
     print("rot euler:\n", euler_from_quaternion(rot))
     print("\n")
 
-    pos, rot = query_pose(listener, "map", "ar_marker_107")
-    print("pos:", pos)
-    print("rot:", rot)
-    print("rot matrix:\n", quaternion_matrix(rot))
-    print("\n")
-
-    pos, rot = query_pose(listener, "ar_marker_107", "base_footprint")
-    print("pos:", pos)
-    print("rot:", rot)
-    print("rot matrix:\n", quaternion_matrix(rot))
-    print("\n")
+    # pos, rot = query_pose(listener, "map", "ar_marker_107")
+    # print("pos:", pos)
+    # print("rot:", rot)
+    # print("rot matrix:\n", quaternion_matrix(rot))
+    # print("\n")
+    #
+    # pos, rot = query_pose(listener, "ar_marker_107", "base_footprint")
+    # print("pos:", pos)
+    # print("rot:", rot)
+    # print("rot matrix:\n", quaternion_matrix(rot))
+    # print("\n")
 
     # curr_joints = get_current_angles()
     # print("current joints", curr_joints)

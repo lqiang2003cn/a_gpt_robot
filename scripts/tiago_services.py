@@ -102,6 +102,7 @@ def static_transform(parent_frame_id, child_frame_id, transform_pose):
     static_transformStamped.transform.rotation.z = transform_pose['orientation'][2]
     static_transformStamped.transform.rotation.w = transform_pose['orientation'][3]
 
+
     broadcaster.sendTransform(static_transformStamped)
 
 

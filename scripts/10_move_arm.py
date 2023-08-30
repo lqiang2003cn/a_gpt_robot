@@ -2,13 +2,21 @@
 
 from __future__ import print_function
 
-from copy import copy
-from math import pow, sqrt, atan2
 import rospy
-from geometry_msgs.msg import Twist
 import tf
 from tf.transformations import euler_from_quaternion, quaternion_matrix
-from utils import get_current_angles, publish_joints, query_pose
+
+
+def query_pose(tf_lst, target_frame, source_frame):
+    tf_pos, tf_rot = None, None
+    while not rospy.is_shutdown():
+        try:
+            tf_pos, tf_rot = tf_lst.lookupTransform(target_frame, source_frame, rospy.Time(0))
+            break
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            continue
+    return tf_pos, tf_rot
+
 
 if __name__ == "__main__":
     rospy.init_node('move_arm')
@@ -40,4 +48,3 @@ if __name__ == "__main__":
     # curr_joints[1] = 135
     # curr_joints = [89.0, 170.0, 0.0, 9.0, 89.0, 30.0]
     # publish_joints(curr_joints)
-

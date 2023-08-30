@@ -1,4 +1,15 @@
-roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true end_effector:=pal-gripper world:=tutorial_office gzpose:="-x -3.5 -y -0.85 -z 0 -R 0 -P 0 -Y -3.0"
+################################ frequently used ################################
+unset all_proxy && unset ALL_PROXY
+set all_proxy && set ALL_PROXY
+catkin build --jobs 8 --cmake-args "-DCMAKE_BUILD_TYPE=Debug"
+
+
+################################ tiago gpt ################################
+roslaunch tiago_dual_2dnav_gazebo tiago_dual_navigation.launch public_sim:=true lost:=false
+roslaunch rosbridge_server rosbridge_websocket.launch
+rosrun a_gpt_robot tiago_services.py
+rosrun a_gpt_robot tiago_clients.py
+
 rosrun tf static_transform_publisher -3.800000 8.000018 0.839077 0 0 0 1 map tube_frame 100
 rosrun tf static_transform_publisher 0 0 0.2 0 0 0 1 tube_frame tube_pre_pick 100
 rosrun tf static_transform_publisher 0.05 0 0 0 0 0 1 gripper_left_grasping_frame gripper_center 100

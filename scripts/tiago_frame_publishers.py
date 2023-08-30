@@ -51,8 +51,6 @@ def get_matrix_from_pose(pos, quat):
     return p_mat
 
 
-
-
 if __name__ == '__main__':
     try:
         rospy.init_node('tiago_frame_publisher')
@@ -147,7 +145,6 @@ if __name__ == '__main__':
 # t,
 # "target",
 # "source");
-
 
 
 # pre_pick_pose = deepcopy(obj_pose)

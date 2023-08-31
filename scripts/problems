@@ -5,6 +5,11 @@ catkin build --jobs 8 --cmake-args "-DCMAKE_BUILD_TYPE=Debug"
 
 
 ################################ tiago gpt ################################
+prepick tool:
+    pos: -3.599; 8; 0.84
+    quat: 0; 0.70711; 0.70711; 0
+
+
 roslaunch tiago_dual_2dnav_gazebo tiago_dual_navigation.launch public_sim:=true lost:=false
 roslaunch rosbridge_server rosbridge_websocket.launch
 rosrun a_gpt_robot tiago_services.py
@@ -17,12 +22,11 @@ rosrun tf static_transform_publisher 0.05 0 0 0 0 0 1 gripper_left_grasping_fram
 rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 tube_pre_pick arm_left_tool_link_cal 100
 rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 gripper_center arm_left_tool_link_cal 100
 
-
 rosrun tf static_transform_publisher 0 0 0 0. 1. 0. 0. tube_pre_pick tube_turned 100
 rosrun tf static_transform_publisher -0.201 0 0 -0.707 -0.000 -0.000 0.707 tube_turned tube_trans 100
 
 
-rosrun tf tf_echo gripper_center arm_left_tool_link 1
+rosrun tf tf_echo gripper_left_grasping_frame arm_left_tool_link 1
 - Translation: [-0.201, 0.000, 0.000]
 - Rotation: in Quaternion [-0.707, -0.000, -0.000, 0.707]
             in RPY (radian) [-1.571, -0.000, -0.000]

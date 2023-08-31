@@ -5,6 +5,7 @@ import sys
 import actionlib
 import geometry_msgs
 import moveit_commander
+import numpy as np
 import rospy
 import tf
 import tf2_ros
@@ -12,6 +13,32 @@ from a_gpt_robot.srv import MovePose, MovePoseResponse
 from geometry_msgs.msg import PoseStamped
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from std_srvs.srv import Trigger, Empty
+from tf.transformations import translation_matrix, quaternion_matrix, quaternion_from_matrix, translation_from_matrix, \
+    quaternion_from_euler
+
+
+def wait_for_state_update(object_name, box_is_known=False, box_is_attached=False, timeout=4):
+    start = rospy.get_time()
+    seconds = rospy.get_time()
+    while (seconds - start < timeout) and not rospy.is_shutdown():
+        # Test if the box is in attached objects
+        attached_objects = scene.get_attached_objects([object_name])
+        is_attached = len(attached_objects.keys()) > 0
+
+        # Test if the box is in the scene.
+        # Note that attaching the box will remove it from known_objects
+        is_known = object_name in scene.get_known_object_names()
+
+        # Test if we are in the expected state
+        if (box_is_attached == is_attached) and (box_is_known == is_known):
+            return True
+
+        # Sleep so that we give other threads time on the processor
+        rospy.sleep(0.1)
+        seconds = rospy.get_time()
+
+    # If we exited the while loop without returning then we timed out
+    return False
 
 
 def move_base_to_pose(srv_request):
@@ -102,8 +129,73 @@ def static_transform(parent_frame_id, child_frame_id, transform_pose):
     static_transformStamped.transform.rotation.z = transform_pose['orientation'][2]
     static_transformStamped.transform.rotation.w = transform_pose['orientation'][3]
 
-
     broadcaster.sendTransform(static_transformStamped)
+
+
+def get_matrix_from_pose(pos, quat):
+    t_mat = translation_matrix(pos)
+    q_mat = quaternion_matrix(quat)
+    p_mat = np.dot(t_mat, q_mat)
+    return p_mat
+
+
+def get_object_prepick(obj_pos, obj_quat):
+    tube_frame_mat = get_matrix_from_pose(obj_pos, obj_quat)
+
+    prepick_pos = np.array(obj_pos) + np.array(prepick_diff)
+    m_x = tube_frame_mat[0:3, 0]
+    m_y = tube_frame_mat[0:3, 1]
+    m_z = tube_frame_mat[0:3, 2]
+    m_new = np.zeros((4, 4))
+    m_new[3, 3] = 1
+    # m_new[0:3, 0] = -1 * m_x
+    m_new[0:3, 0] = m_x
+    m_new[0:3, 1] = 1 * m_y
+    m_new[0:3, 2] = -1 * m_z
+    prepick_quat = quaternion_from_matrix(m_new)
+
+    prepick_frame_mat = get_matrix_from_pose(prepick_pos, prepick_quat)
+    prepick_to_tool_mat = get_matrix_from_pose(gripper_center_to_tool_pos, gripper_center_to_tool_quat)
+    tool_frame_mat = np.dot(prepick_frame_mat, prepick_to_tool_mat)
+    tool_pos = translation_from_matrix(tool_frame_mat)
+    # tool_pos[1] -= 0.08
+    tool_quat = quaternion_from_matrix(tool_frame_mat)
+    return tool_pos, tool_quat
+
+
+def add_table(object_name, object_pos, object_euler, timeout=4):
+    object_pose = geometry_msgs.msg.PoseStamped()
+    object_pose.header.frame_id = "odom"
+
+    object_pose.pose.position.x = object_pos[0]
+    object_pose.pose.position.y = object_pos[1]
+    object_pose.pose.position.z = object_pos[2]
+
+    q = quaternion_from_euler(object_euler[0], object_euler[1], object_euler[2])
+    object_pose.pose.orientation.x = q[0]
+    object_pose.pose.orientation.y = q[1]
+    object_pose.pose.orientation.z = q[2]
+    object_pose.pose.orientation.w = q[3]
+
+    scene.add_box(object_name, object_pose, size=(1 + 1, 0.8 + 0.1, 0.83))
+    return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
+
+
+def add_box(object_name, timeout=4):
+    box_pose = geometry_msgs.msg.PoseStamped()
+    box_pose.header.frame_id = "odom"
+
+    box_pose.pose.position.x = orange_pos[0]
+    box_pose.pose.position.y = orange_pos[1]
+    box_pose.pose.position.z = orange_pos[2]
+
+    box_pose.pose.orientation.x = orange_quat[0]
+    box_pose.pose.orientation.y = orange_quat[1]
+    box_pose.pose.orientation.z = orange_quat[2]
+    box_pose.pose.orientation.w = orange_quat[3]
+
+    scene.add_box(object_name, box_pose, size=(0.05, 0.05, 0.05))
+    return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
 
 
 if __name__ == "__main__":
@@ -111,58 +203,30 @@ if __name__ == "__main__":
     moveit_commander.roscpp_initialize(sys.argv)
     robot = moveit_commander.RobotCommander()
     scene = moveit_commander.PlanningSceneInterface()
+    rospy.sleep(2)
     move_group = moveit_commander.MoveGroupCommander("arm_left_torso")
     gripper_group = moveit_commander.MoveGroupCommander("gripper_left")
     listener = tf.TransformListener()
 
     office_room_table_111_x = 4.2
     office_room_table_111_y = -3
-
     office_room_table_26_x = -4.2
     office_room_table_26_y = -3
-
     office_room_table_63_x = -4.2
     office_room_table_63_y = 3
-
     office_room_table_238_x = 4.2
     office_room_table_238_y = 3
-
     stock_room_table_333_x = -4
     stock_room_table_333_y = 8
 
-    table_x_diff = 1.0
+    orange_pos = [0.8, 0, 0.84]
+    orange_quat = [0, 0, 0, 1]
+    table_x_diff = 1.05
+    prepick_diff = [0, 0, 0.2]
+    gripper_center_to_tool_pos = [-0.201, 0, 0]
+    gripper_center_to_tool_quat = [-0.707, -0.000, -0.000, 0.707]
 
-    # orange_pose_x = -3.6
-    # orange_pose_y = 7.8
-    # orange_pose_z = 0.825
-
-    # pre_pick_diff_x = 0.2
-    # pre_pick_diff_y = -0.035
-    # pre_pick_diff_z = 0.2
-
-    # orange_tool_pose_x = orange_pose_x + pre_pick_diff_x
-    # orange_tool_pose_y = orange_pose_y + pre_pick_diff_y
-    # orange_tool_pose_z = orange_pose_z + pre_pick_diff_z
-
-    # tucked arm in front of stock room table:
-    # position: -3.1437; 7.7771; 0.54792
-    # orientation: 0.4855; 0.53661; 0.54734; -0.42043
-
-    orange_pose_pos_x = -3.800000
-    orange_pose_pos_y = 8.000018
-    orange_pose_pos_z = 0.839077
-
-    # orange_prepick_pose_x = orange_pose_pos_x
-    # orange_prepick_pose_y = orange_pose_pos_y
-    # orange_prepick_pose_z = orange_pose_pos_z + 0.2
-
-    gripper_center_pos_x = orange_pose_pos_x
-    gripper_center_pos_y = orange_pose_pos_y
-    gripper_center_pos_z = orange_pose_pos_z + 0.2
-
-    # arm_left_tool_pos_x =
-    # arm_left_tool_pos_y =
-    # arm_left_tool_pos_z =
+    prepick_tool_pos, prepick_tool_quat = get_object_prepick(orange_pos, orange_quat)
 
     pose_dict = {
         "office room table 111": {
@@ -191,17 +255,50 @@ if __name__ == "__main__":
             "orientation": [0, 0, 1, 0]
         },
         "orange pose": {
-            "frame_id": "map",
-            "position": [orange_pose_pos_x, orange_pose_pos_y, orange_pose_pos_z],
-            # "orientation": quaternion_from_euler(0, 0, 0)
-            "orientation": [0, 0, 0, 1]
+            "frame_id": "odom",
+            "position": orange_pos,
+            "orientation": orange_quat
         },
-        # "orange prepick pose": {
-        #     "frame_id": "map",
-        #     "position": [orange_prepick_pose_x, orange_prepick_pose_y, orange_prepick_pose_z],
-        #     # "orientation": quaternion_from_euler(0, 0, 0)
-        #     "orientation": [0, 0, 0, 1]
-        # },
+        "prepick tool pose": {
+            "frame_id": "odom",
+            "position": prepick_tool_pos,
+            "orientation": prepick_tool_quat
+        }
     }
 
+    add_table("table", [1, 0, 0.4], [0, 0, 1.57])
+    add_box("box")
+
     create_tiago_services()
+
+# orange_pose_x = -3.6
+# orange_pose_y = 7.8
+# orange_pose_z = 0.825
+
+# pre_pick_diff_x = 0.2
+# pre_pick_diff_y = -0.035
+# pre_pick_diff_z = 0.2
+
+# orange_tool_pose_x = orange_pose_x + pre_pick_diff_x
+# orange_tool_pose_y = orange_pose_y + pre_pick_diff_y
+# orange_tool_pose_z = orange_pose_z + pre_pick_diff_z
+
+# tucked arm in front of stock room table:
+# position: -3.1437; 7.7771; 0.54792
+# orientation: 0.4855; 0.53661; 0.54734; -0.42043
+
+# orange_pose_pos_x = -3.800000
+# orange_pose_pos_y = 8.000018
+# orange_pose_pos_z = 0.839077
+
+# orange_prepick_pose_x = orange_pose_pos_x
+# orange_prepick_pose_y = orange_pose_pos_y
+# orange_prepick_pose_z = orange_pose_pos_z + 0.2
+
+# gripper_center_pos_x = orange_pose_pos_x
+# gripper_center_pos_y = orange_pose_pos_y
+# gripper_center_pos_z = orange_pose_pos_z + 0.2
+
+# arm_left_tool_pos_x =
+# arm_left_tool_pos_y =
+# arm_left_tool_pos_z =

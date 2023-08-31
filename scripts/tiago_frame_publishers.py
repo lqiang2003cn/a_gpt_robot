@@ -2,14 +2,11 @@
 
 from __future__ import print_function
 
-import copy
-
 import rospy
 import tf
 import tf2_ros
 from geometry_msgs.msg import TransformStamped, PoseStamped
 from tf.transformations import *
-from copy import deepcopy
 
 
 def query_pose(tf_lst, target_frame, source_frame):
@@ -28,7 +25,6 @@ def static_transform_for_tool(parent_frame, child_frame, obj_pose):
     while not rospy.is_shutdown():
         try:
             tube_ps = listener.transformPose("map", obj_pose)
-            # tube_ps.pose.
             tube_prepick_frame = listener.transformPose("map", obj_pose)
             break
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):

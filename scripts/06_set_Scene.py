@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 from math import pi
 
-import openai
+# import openai
 import rospy, rospkg
 
 from time import sleep
 # import moveit_commander
 # from moveit_msgs.msg import PlanningSceneWorld
-from yahboomcar_msgs.msg import *
+# from yahboomcar_msgs.msg import *
 
 # from geometry_msgs.msg import PoseStamped
 # from moveit_commander import MoveGroupCommander, PlanningSceneInterface, PlanningScene, PlannerInterfaceDescription
@@ -30,16 +30,17 @@ from yahboomcar_msgs.msg import *
 
 
 if __name__ == "__main__":
-    rospy.init_node('Set_Scene')
-    import requests
-
-    key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
-    headers = {"Authorization": f"Bearer {key}"}
-    data = {
-        'model': 'gpt-3.5-turbo',
-        'messages': [{"role": "user", "content": "hello!"}]
-    }
-    print(requests.post("https://api.chatanywhere.com.cn/v1/chat/completions", headers=headers, json=data).json())
+    print "i"
+    # rospy.init_node('Set_Scene')
+    # import requests
+    #
+    # key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
+    # headers = {"Authorization": f"Bearer {key}"}
+    # data = {
+    #     'model': 'gpt-3.5-turbo',
+    #     'messages': [{"role": "user", "content": "hello!"}]
+    # }
+    # print(requests.post("https://api.chatanywhere.com.cn/v1/chat/completions", headers=headers, json=data).json())
 
     # try:
     #     openai.api_key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
@@ -53,9 +54,9 @@ if __name__ == "__main__":
     #     print("Oops! Something went wrong with {e}.", e)
 
     # rospy.init_node('Set_Scene')
-    pub_Arm = rospy.Publisher("TargetAngle", ArmJoint, queue_size=1000)
-    arm_joint = ArmJoint()
-    arm_joint.run_time = 5000
+    # pub_Arm = rospy.Publisher("TargetAngle", ArmJoint, queue_size=1000)
+    # arm_joint = ArmJoint()
+    # arm_joint.run_time = 5000
 
     # joint1: [0,180]: 0: right most, 180: left most, 90: front
     # joint2: [0,180]: 0: back most, 180: forward most, 90: up
@@ -74,7 +75,7 @@ if __name__ == "__main__":
     # arm_joint.joints = [90, 150, 0, 36, 90, 150]
 
     # front high position:
-    arm_joint.joints = [90, 110, 75, 0, 90, 150]
+    # arm_joint.joints = [90, 110, 75, 0, 90, 150]
 
     # right high position:(facing people's left)
     # arm_joint.joints = [0, 110, 75, 0, 90, 150]
@@ -84,9 +85,9 @@ if __name__ == "__main__":
 
 
 
-    for i in range(10):
-        pub_Arm.publish(arm_joint)
-        sleep(0.1)
+    # for i in range(10):
+    #     pub_Arm.publish(arm_joint)
+    #     sleep(0.1)
 
     # arm_joint.id = 1
     # arm_joint.angle = 90

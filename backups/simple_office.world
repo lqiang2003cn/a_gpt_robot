@@ -34,10 +34,10 @@
       <static>1</static>
       <link name='link'>
         <collision name='surface'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <surface>
@@ -55,10 +55,10 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='visual1'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <material>
@@ -69,7 +69,7 @@
           </material>
         </visual>
         <collision name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -91,7 +91,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -106,7 +106,7 @@
           </material>
         </visual>
         <collision name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -128,7 +128,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -143,7 +143,7 @@
           </material>
         </visual>
         <collision name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -165,7 +165,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -180,7 +180,7 @@
           </material>
         </visual>
         <collision name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -202,7 +202,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -225,7 +225,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>4.2 -3 0 0 0 1.57</pose>
+      <pose frame=''>4.2 -3 0 0 0 0</pose>
     </model>
     <model name='aruco_marker_original_111'>
       <static>1</static>
@@ -288,10 +288,10 @@
       <static>1</static>
       <link name='link'>
         <collision name='surface'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <surface>
@@ -309,10 +309,10 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='visual1'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <material>
@@ -323,7 +323,7 @@
           </material>
         </visual>
         <collision name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -345,7 +345,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -360,7 +360,7 @@
           </material>
         </visual>
         <collision name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -382,7 +382,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -397,7 +397,7 @@
           </material>
         </visual>
         <collision name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -419,7 +419,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -434,7 +434,7 @@
           </material>
         </visual>
         <collision name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -456,7 +456,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -479,7 +479,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-4.2 -3 0 0 0 1.57</pose>
+      <pose frame=''>-4.2 -3 0 0 0 0</pose>
     </model>
     <model name='aruco_marker_original_26'>
       <static>1</static>
@@ -542,10 +542,10 @@
       <static>1</static>
       <link name='link'>
         <collision name='surface'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <surface>
@@ -563,10 +563,10 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='visual1'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <material>
@@ -577,7 +577,7 @@
           </material>
         </visual>
         <collision name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -599,7 +599,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -614,7 +614,7 @@
           </material>
         </visual>
         <collision name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -636,7 +636,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -651,7 +651,7 @@
           </material>
         </visual>
         <collision name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -673,7 +673,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -688,7 +688,7 @@
           </material>
         </visual>
         <collision name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -710,7 +710,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -733,7 +733,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-4.2 3 0 0 0 1.57</pose>
+      <pose frame=''>-4.2 3 0 0 0 0</pose>
     </model>
     <model name='aruco_marker_original_63'>
       <static>1</static>
@@ -796,10 +796,10 @@
       <static>1</static>
       <link name='link'>
         <collision name='surface'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <surface>
@@ -817,10 +817,10 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='visual1'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <material>
@@ -831,7 +831,7 @@
           </material>
         </visual>
         <collision name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -853,7 +853,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -868,7 +868,7 @@
           </material>
         </visual>
         <collision name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -890,7 +890,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -905,7 +905,7 @@
           </material>
         </visual>
         <collision name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -927,7 +927,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -942,7 +942,7 @@
           </material>
         </visual>
         <collision name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -964,7 +964,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -987,7 +987,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>4.2 3 0 0 0 1.57</pose>
+      <pose frame=''>4.2 3 0 0 0 0</pose>
     </model>
     <model name='aruco_marker_original_238'>
       <static>1</static>
@@ -1046,14 +1046,14 @@
       <pose frame=''>4 3 0.815 0 0 0</pose>
     </model>
 
-    <model name='stock_room_table_333'>
+    <model name='office_room_table_333'>
       <static>1</static>
       <link name='link'>
         <collision name='surface'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <surface>
@@ -1071,10 +1071,10 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='visual1'>
-          <pose frame=''>0 0 0.8 0 -0 0</pose>
+          <pose frame=''>0 0 0.8 0 0 0</pose>
           <geometry>
             <box>
-              <size>1 0.8 0.03</size>
+              <size>0.8 1 0.03</size>
             </box>
           </geometry>
           <material>
@@ -1085,7 +1085,7 @@
           </material>
         </visual>
         <collision name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1107,7 +1107,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_left_leg'>
-          <pose frame=''>0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1122,7 +1122,7 @@
           </material>
         </visual>
         <collision name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1144,7 +1144,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='front_right_leg'>
-          <pose frame=''>0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1159,7 +1159,7 @@
           </material>
         </visual>
         <collision name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1181,7 +1181,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_right_leg'>
-          <pose frame=''>-0.48 -0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 -0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1196,7 +1196,7 @@
           </material>
         </visual>
         <collision name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1218,7 +1218,7 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='back_left_leg'>
-          <pose frame=''>-0.48 0.38 0.4 0 -0 0</pose>
+          <pose frame=''>-0.38 0.48 0.4 0 -0 0</pose>
           <geometry>
             <cylinder>
               <radius>0.02</radius>
@@ -1241,7 +1241,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-4 8 0 0 0 1.57</pose>
+      <pose frame=''>-4.2 8 0 0 0 0</pose>
     </model>
     <model name='aruco_cube_333'>
       <static>0</static>
@@ -1261,7 +1261,7 @@
           <pose frame=''>0 0 0 0 -0 0</pose>
           <geometry>
             <box>
-              <size>0.05 0.05 0.05</size>
+              <size>0.05 0.05 0.1</size>
             </box>
           </geometry>
           <surface>
@@ -1288,12 +1288,16 @@
           <max_contacts>10</max_contacts>
         </collision>
         <visual name='visual1'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
+          <pose frame=''>0 0 0 0 0 0</pose>
           <geometry>
-            <mesh>
-              <uri>model://aruco_cube_333/meshes/aruco_cube_5cm.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
+              <box>
+                <size>0.05 0.05 0.1</size>
+              </box>
+            <!--&lt;!&ndash;            <mesh>&ndash;&gt;-->
+            <!--&lt;!&ndash;              <uri>model://aruco_cube_333/meshes/aruco_cube_5cm.dae</uri>&ndash;&gt;-->
+            <!--&lt;!&ndash;              <scale>1 1 2</scale>&ndash;&gt;-->
+            <!--&lt;!&ndash;            </mesh>&ndash;&gt;-->
+            <!--          </geometry>-->
           </geometry>
         </visual>
         <velocity_decay>
@@ -1305,15 +1309,8 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-3.8 8 0.825 0 -1.57 0</pose>
+      <pose frame=''>-3.95 8 0.865 0 0 0</pose>
     </model>
-
-
-
-
-
-
-
 
     <model name="wall_1_model">
       <pose>0 -5 1 0 0 0</pose>

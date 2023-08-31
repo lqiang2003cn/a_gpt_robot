@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import copy
 import sys
 
 import actionlib
@@ -188,13 +188,12 @@ def add_box(object_name, timeout=4):
     box_pose.pose.position.x = orange_pos[0]
     box_pose.pose.position.y = orange_pos[1]
     box_pose.pose.position.z = orange_pos[2]
-
     box_pose.pose.orientation.x = orange_quat[0]
     box_pose.pose.orientation.y = orange_quat[1]
     box_pose.pose.orientation.z = orange_quat[2]
     box_pose.pose.orientation.w = orange_quat[3]
 
-    scene.add_box(object_name, box_pose, size=(0.05, 0.05, 0.05))
+    scene.add_box(object_name, box_pose, size=(0.05, 0.05, 0.1))
     return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
 
 
@@ -219,14 +218,16 @@ if __name__ == "__main__":
     stock_room_table_333_x = -4
     stock_room_table_333_y = 8
 
-    orange_pos = [0.8, 0, 0.84]
+    orange_pos = [0.75, 0, 0.865]
     orange_quat = [0, 0, 0, 1]
-    table_x_diff = 1.05
-    prepick_diff = [0, 0, 0.2]
+    table_x_diff = 1.1
+    prepick_diff = [0, 0, 0.3]
     gripper_center_to_tool_pos = [-0.201, 0, 0]
     gripper_center_to_tool_quat = [-0.707, -0.000, -0.000, 0.707]
 
     prepick_tool_pos, prepick_tool_quat = get_object_prepick(orange_pos, orange_quat)
+    pick_tool_pos, pick_tool_quat = copy.deepcopy(prepick_tool_pos), copy.deepcopy(prepick_tool_quat)
+    pick_tool_pos[2] -= 0.22
 
     pose_dict = {
         "office room table 111": {
@@ -263,7 +264,12 @@ if __name__ == "__main__":
             "frame_id": "odom",
             "position": prepick_tool_pos,
             "orientation": prepick_tool_quat
-        }
+        },
+        "pick tool pose": {
+            "frame_id": "odom",
+            "position": pick_tool_pos,
+            "orientation": pick_tool_quat
+        },
     }
 
     add_table("table", [1, 0, 0.4], [0, 0, 1.57])

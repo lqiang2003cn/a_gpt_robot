@@ -24,18 +24,9 @@ def call_service_func(sn, args):
 
 
 if __name__ == "__main__":
-    # arg = {
-    #     "pose_str": "stock room table 333"
-    # }
-    # call_service_func("move_base_to_pose", arg)
-
-    arg = {
-        "pose_str": "prepick tool pose"
-    }
-    call_service_func("move_arm_to_pose", arg)
-    #
-    # arg = {}
-    # call_service_func("close_gripper", arg)
-    #
-    # arg = {}
-    # call_service_func("open_gripper", arg)
+    call_service_func("move_base_to_pose", {"pose_str": "stock room table 333"})
+    call_service_func("open_gripper", {})
+    call_service_func("move_arm_to_pose", {"pose_str": "prepick tool pose"})
+    call_service_func("move_arm_to_pose", {"pose_str": "pick tool pose"})
+    call_service_func("close_gripper", {})
+    call_service_func("move_arm_to_pose", {"pose_str": "prepick tool pose"})

@@ -149,7 +149,7 @@ def get_object_prepick(obj_pos, obj_quat):
     m_new = np.zeros((4, 4))
     m_new[3, 3] = 1
     # m_new[0:3, 0] = -1 * m_x
-    m_new[0:3, 0] = m_x
+    m_new[0:3, 0] = -1 * m_x
     m_new[0:3, 1] = 1 * m_y
     m_new[0:3, 2] = -1 * m_z
     prepick_quat = quaternion_from_matrix(m_new)
@@ -163,7 +163,7 @@ def get_object_prepick(obj_pos, obj_quat):
     return tool_pos, tool_quat
 
 
-def add_table(object_name, object_pos, object_euler, timeout=4):
+def add_object(object_name, object_pos, object_euler, object_size, timeout=4):
     object_pose = geometry_msgs.msg.PoseStamped()
     object_pose.header.frame_id = "odom"
 
@@ -177,23 +177,7 @@ def add_table(object_name, object_pos, object_euler, timeout=4):
     object_pose.pose.orientation.z = q[2]
     object_pose.pose.orientation.w = q[3]
 
-    scene.add_box(object_name, object_pose, size=(1 + 1, 0.8 + 0.1, 0.83))
-    return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
-
-
-def add_box(object_name, timeout=4):
-    box_pose = geometry_msgs.msg.PoseStamped()
-    box_pose.header.frame_id = "odom"
-
-    box_pose.pose.position.x = orange_pos[0]
-    box_pose.pose.position.y = orange_pos[1]
-    box_pose.pose.position.z = orange_pos[2]
-    box_pose.pose.orientation.x = orange_quat[0]
-    box_pose.pose.orientation.y = orange_quat[1]
-    box_pose.pose.orientation.z = orange_quat[2]
-    box_pose.pose.orientation.w = orange_quat[3]
-
-    scene.add_box(object_name, box_pose, size=(0.05, 0.05, 0.1))
+    scene.add_box(object_name, object_pose, size=object_size)
     return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
 
 
@@ -206,59 +190,82 @@ if __name__ == "__main__":
     move_group = moveit_commander.MoveGroupCommander("arm_left_torso")
     gripper_group = moveit_commander.MoveGroupCommander("gripper_left")
     listener = tf.TransformListener()
+    table_x_diff = 1.15
 
-    office_room_table_111_x = 4.2
-    office_room_table_111_y = -3
-    office_room_table_26_x = -4.2
-    office_room_table_26_y = -3
-    office_room_table_63_x = -4.2
-    office_room_table_63_y = 3
-    office_room_table_238_x = 4.2
-    office_room_table_238_y = 3
-    stock_room_table_333_x = -4
-    stock_room_table_333_y = 8
+    box_pos, box_quat, box_size = [-3.95, 8, 0.865], [0, 0, 0, 1], [0.05, 0.05, 0.1]
 
-    orange_pos = [0.75, 0, 0.865]
-    orange_quat = [0, 0, 0, 1]
-    table_x_diff = 1.1
+    of_table_111_pos = [4.2, -3, 0.4]
+    of_table_111_quat = quaternion_from_euler(0, 0, 0)
+    of_table_111_size = [0.8 + 0.2, 1 + 1, 0.815 + 0.03]
+
+    of_table_26_pos = [-4.2, -3, 0.4]
+    of_table_26_quat = quaternion_from_euler(0, 0, 0)
+    of_table_26_size = [0.8 + 0.1, 1 + 1, 0.815 + 0.05]
+
+    of_table_63_pos = [-4.2, 3, 0.4]
+    of_table_63_quat = quaternion_from_euler(0, 0, 0)
+    of_table_63_size = [0.8 + 0.1, 1 + 1, 0.815 + 0.05]
+
+    of_table_238_pos = [4.2, 3, 0.4]
+    of_table_238_quat = quaternion_from_euler(0, 0, 0)
+    of_table_238_size = [0.8 + 0.1, 1 + 1, 0.815 + 0.05]
+
+    sr_table_333_pos = [-4.2, 8, 0.4]
+    sr_table_333_quat = quaternion_from_euler(0, 0, 0)
+    sr_table_333_size = [0.8 + 0.1, 1 + 1, 0.815 + 0.05]
+
+    # for navigation
+    of_table_111_front_pos = [-4.2 + table_x_diff, 8, 0]
+    of_table_111_front_quat = [0, 0, 1, 0]
+
+    sr_table_333_front_pos = [-4.2 + table_x_diff, 8, 0]
+    sr_table_333_front_quat = [0, 0, 1, 0]
+
+    add_object("box", box_pos, box_quat, box_size)
+    add_object("of_table_111", of_table_111_pos, of_table_111_quat, of_table_111_size)
+    add_object("of_table_238", of_table_238_pos, of_table_238_quat, of_table_238_size)
+    add_object("of_table_26", of_table_26_pos, of_table_26_quat, of_table_26_size)
+    add_object("of_table_63", of_table_63_pos, of_table_63_quat, of_table_63_size)
+    add_object("sr_table_333", sr_table_333_pos, sr_table_333_quat, sr_table_333_size)
+
     prepick_diff = [0, 0, 0.3]
     gripper_center_to_tool_pos = [-0.201, 0, 0]
     gripper_center_to_tool_quat = [-0.707, -0.000, -0.000, 0.707]
 
-    prepick_tool_pos, prepick_tool_quat = get_object_prepick(orange_pos, orange_quat)
+    prepick_tool_pos, prepick_tool_quat = get_object_prepick(box_pos, box_quat)
     pick_tool_pos, pick_tool_quat = copy.deepcopy(prepick_tool_pos), copy.deepcopy(prepick_tool_quat)
     pick_tool_pos[2] -= 0.22
 
     pose_dict = {
-        "office room table 111": {
+        "office room table 111 front": {
             "frame_id": "map",
-            "position": [office_room_table_111_x - table_x_diff, office_room_table_111_y, 0],
-            "orientation": [0, 0, 0, 1]
+            "position": of_table_111_pos,
+            "orientation": of_table_111_quat
         },
         "office room table 26": {
             "frame_id": "map",
-            "position": [office_room_table_26_x + table_x_diff, office_room_table_26_y, 0],
-            "orientation": [0, 0, 1, 0]
+            "position": of_table_26_pos,
+            "orientation": of_table_26_quat
         },
         "office room table 63": {
             "frame_id": "map",
-            "position": [office_room_table_63_x + table_x_diff, office_room_table_63_y, 0],
-            "orientation": [0, 0, 1, 0]
+            "position": of_table_63_pos,
+            "orientation": of_table_63_quat
         },
         "office room table 238": {
             "frame_id": "map",
-            "position": [office_room_table_238_x - table_x_diff, office_room_table_238_y, 0],
-            "orientation": [0, 0, 0, 1]
+            "position": of_table_238_pos,
+            "orientation": of_table_238_quat
         },
-        "stock room table 333": {
+        "stock room table 333 front": {
             "frame_id": "map",
-            "position": [stock_room_table_333_x + table_x_diff, stock_room_table_333_y, 0],
-            "orientation": [0, 0, 1, 0]
+            "position": sr_table_333_front_pos,
+            "orientation": sr_table_333_front_quat
         },
         "orange pose": {
             "frame_id": "odom",
-            "position": orange_pos,
-            "orientation": orange_quat
+            "position": box_pos,
+            "orientation": box_quat
         },
         "prepick tool pose": {
             "frame_id": "odom",
@@ -271,9 +278,6 @@ if __name__ == "__main__":
             "orientation": pick_tool_quat
         },
     }
-
-    add_table("table", [1, 0, 0.4], [0, 0, 1.57])
-    add_box("box")
 
     create_tiago_services()
 

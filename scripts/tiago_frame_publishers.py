@@ -8,27 +8,7 @@ import tf
 import tf2_ros
 from geometry_msgs.msg import TransformStamped, PoseStamped
 from tf.transformations import *
-
-
-def unit_vector(vector):
-    return vector / np.linalg.norm(vector)
-
-
-def angle_between(v1, v2):
-    v1_u = unit_vector(v1)
-    v2_u = unit_vector(v2)
-    return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
-
-
-def query_pose(tf_lst, target_frame, source_frame):
-    tf_pos, tf_rot = None, None
-    while not rospy.is_shutdown():
-        try:
-            tf_pos, tf_rot = tf_lst.lookupTransform(target_frame, source_frame, rospy.Time(0))
-            break
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            continue
-    return tf_pos, tf_rot
+from utils import query_pose, angle_between
 
 
 def static_transform_for_tool(parent_frame, child_frame, obj_pose):

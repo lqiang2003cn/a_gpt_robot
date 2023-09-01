@@ -280,35 +280,3 @@ if __name__ == "__main__":
     }
 
     create_tiago_services()
-
-# orange_pose_x = -3.6
-# orange_pose_y = 7.8
-# orange_pose_z = 0.825
-
-# pre_pick_diff_x = 0.2
-# pre_pick_diff_y = -0.035
-# pre_pick_diff_z = 0.2
-
-# orange_tool_pose_x = orange_pose_x + pre_pick_diff_x
-# orange_tool_pose_y = orange_pose_y + pre_pick_diff_y
-# orange_tool_pose_z = orange_pose_z + pre_pick_diff_z
-
-# tucked arm in front of stock room table:
-# position: -3.1437; 7.7771; 0.54792
-# orientation: 0.4855; 0.53661; 0.54734; -0.42043
-
-# orange_pose_pos_x = -3.800000
-# orange_pose_pos_y = 8.000018
-# orange_pose_pos_z = 0.839077
-
-# orange_prepick_pose_x = orange_pose_pos_x
-# orange_prepick_pose_y = orange_pose_pos_y
-# orange_prepick_pose_z = orange_pose_pos_z + 0.2
-
-# gripper_center_pos_x = orange_pose_pos_x
-# gripper_center_pos_y = orange_pose_pos_y
-# gripper_center_pos_z = orange_pose_pos_z + 0.2
-
-# arm_left_tool_pos_x =
-# arm_left_tool_pos_y =
-# arm_left_tool_pos_z =

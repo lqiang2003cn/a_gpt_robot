@@ -15,7 +15,9 @@ roslaunch rosbridge_server rosbridge_websocket.launch
 rosrun a_gpt_robot tiago_services.py
 rosrun a_gpt_robot tiago_clients.py
 
-rosrun tf static_transform_publisher -3.800000 8.000018 0.839077 0 0 0 1 map tube_frame 100
+rosrun tf static_transform_publisher -3.95, 8, 0.865 0 0 0 1 odom tube_frame 100
+rosrun tf static_transform_publisher -4, 3, 0.865 0 0 0 1 odom tube_frame 100
+rosrun tf static_transform_publisher 4, 3, 0.865 0 0 0 1 odom tube_frame 100
 rosrun tf static_transform_publisher 0 0 0.2 0 0 0 1 tube_frame tube_pre_pick 100
 rosrun tf static_transform_publisher 0.05 0 0 0 0 0 1 gripper_left_grasping_frame gripper_center 100
 

@@ -9,7 +9,7 @@ import tf2_ros
 from geometry_msgs.msg import TransformStamped, PoseStamped
 from tf.transformations import *
 
-from tiago_services import get_object_prepick
+from tiago_services import get_object_above_pose
 from utils import query_pose
 
 
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         # gg_pos, gg_quat = query_pose(listener, "odom", "gripper_left_grasping_frame")
         # gg_frame_mat = get_matrix_from_pose(gg_pos, gg_quat)
         while not rospy.is_shutdown():
-            prepick_pos, prepick_quat = get_object_prepick(listener, tube_pos, tube_quat, prepick_diff)
+            prepick_pos, prepick_quat = get_object_above_pose(listener, tube_pos, tube_quat, prepick_diff)
             # m_new = numpy.eye(4, 4)
             #
             # tube_x = tube_frame_mat[0:3, 0]

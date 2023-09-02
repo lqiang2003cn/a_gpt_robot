@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import copy
 import sys
 
 import actionlib
@@ -13,9 +12,9 @@ from a_gpt_robot.srv import MovePose, MovePoseResponse
 from geometry_msgs.msg import PoseStamped
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from std_srvs.srv import Trigger, Empty
-from tf.transformations import quaternion_from_matrix, translation_from_matrix, quaternion_from_euler
+from tf.transformations import quaternion_from_euler
 
-from utils import get_object_prepick, get_matrix_from_pose, get_pose_from_matrix
+from utils import get_object_above_pose, get_matrix_from_pose, get_pos_and_quat_from_matrix, center_to_tool, pose_by_diff
 
 
 def wait_for_state_update(object_name, box_is_known=False, box_is_attached=False, timeout=4):
@@ -47,16 +46,17 @@ def move_base_to_pose(srv_request):
     client.wait_for_server()
 
     pose = pose_dict[srv_request.pose_str]
+    pose_pos, pose_quat = get_pos_and_quat_from_matrix(pose["pose"])
 
     goal = MoveBaseGoal()
     goal.target_pose.header.frame_id = pose["frame_id"]
     goal.target_pose.header.stamp = rospy.Time.now()
-    goal.target_pose.pose.position.x = pose["position"][0]
-    goal.target_pose.pose.position.y = pose["position"][1]
-    goal.target_pose.pose.orientation.x = pose["orientation"][0]
-    goal.target_pose.pose.orientation.y = pose["orientation"][1]
-    goal.target_pose.pose.orientation.z = pose["orientation"][2]
-    goal.target_pose.pose.orientation.w = pose["orientation"][3]
+    goal.target_pose.pose.position.x = pose_pos[0]
+    goal.target_pose.pose.position.y = pose_pos[1]
+    goal.target_pose.pose.orientation.x = pose_quat[0]
+    goal.target_pose.pose.orientation.y = pose_quat[1]
+    goal.target_pose.pose.orientation.z = pose_quat[2]
+    goal.target_pose.pose.orientation.w = pose_quat[3]
 
     client.send_goal(goal)
     client.wait_for_result()
@@ -65,16 +65,17 @@ def move_base_to_pose(srv_request):
 
 def move_arm_to_pose(srv_request):
     arm_pose = pose_dict[srv_request.pose_str]
+    pose_pos, pose_quat = get_pos_and_quat_from_matrix(arm_pose["pose"])
 
     pose_goal = PoseStamped()
     pose_goal.header.frame_id = arm_pose["frame_id"]
-    pose_goal.pose.position.x = arm_pose["position"][0]
-    pose_goal.pose.position.y = arm_pose["position"][1]
-    pose_goal.pose.position.z = arm_pose["position"][2]
-    pose_goal.pose.orientation.x = arm_pose["orientation"][0]
-    pose_goal.pose.orientation.y = arm_pose["orientation"][1]
-    pose_goal.pose.orientation.z = arm_pose["orientation"][2]
-    pose_goal.pose.orientation.w = arm_pose["orientation"][3]
+    pose_goal.pose.position.x = pose_pos[0]
+    pose_goal.pose.position.y = pose_pos[1]
+    pose_goal.pose.position.z = pose_pos[2]
+    pose_goal.pose.orientation.x = pose_quat[0]
+    pose_goal.pose.orientation.y = pose_quat[1]
+    pose_goal.pose.orientation.z = pose_quat[2]
+    pose_goal.pose.orientation.w = pose_quat[3]
     move_group.set_pose_target(pose_goal)
 
     move_group.go(wait=True)
@@ -160,12 +161,17 @@ if __name__ == "__main__":
     move_group = moveit_commander.MoveGroupCommander("arm_left_torso")
     gripper_group = moveit_commander.MoveGroupCommander("gripper_left")
     listener = tf.TransformListener()
+
+    id_quat = np.array([0, 0, 0, 1])
     table_x_diff = 1.15
     prepick_diff = np.array([0, 0, 0.25])
+    preplace_diff = np.array([0, 0, 0.25])
     pick_diff = np.array([0, 0, 0.17])
+    holding_diff = np.array([-0.3, 0, 0])
     place_diff = np.array([0, 0, 0.14])
     gripper_center_to_tool_pos = np.array([-0.201, 0, 0])
     gripper_center_to_tool_quat = np.array([-0.707, -0.000, -0.000, 0.707])
+    center_to_tool_transform = get_matrix_from_pose(gripper_center_to_tool_pos, gripper_center_to_tool_quat)
 
     box_pos, box_quat, box_size = np.array([-3.95, 8, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
     stk111_pos, stk111_quat, stk111_size = np.array([4, -3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
@@ -177,21 +183,25 @@ if __name__ == "__main__":
     sr_table_333_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
 
     # office room
-    of_table_111_pos = np.array([4.2, -3, 0.4])
-    of_table_111_quat = quaternion_from_euler(0, 0, 0)
-    of_table_111_size = np.array([0.8 + 0.2, 1 + 1, 0.815 + 0.03])
-
+    # front and left
     of_table_238_pos = np.array([4.2, 3, 0.4])
     of_table_238_quat = quaternion_from_euler(0, 0, 0)
     of_table_238_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
 
-    of_table_26_pos = np.array([-4.2, -3, 0.4])
-    of_table_26_quat = quaternion_from_euler(0, 0, 0)
-    of_table_26_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
-
+    # behind and left
     of_table_63_pos = np.array([-4.2, 3, 0.4])
     of_table_63_quat = quaternion_from_euler(0, 0, 0)
     of_table_63_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
+
+    # front and right
+    of_table_111_pos = np.array([4.2, -3, 0.4])
+    of_table_111_quat = quaternion_from_euler(0, 0, 0)
+    of_table_111_size = np.array([0.8 + 0.2, 1 + 1, 0.815 + 0.03])
+
+    # behind and right
+    of_table_26_pos = np.array([-4.2, -3, 0.4])
+    of_table_26_quat = quaternion_from_euler(0, 0, 0)
+    of_table_26_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
 
     # for navigation
     of_table_111_front_pos = np.array([-4.2 + table_x_diff, 3, 0])
@@ -210,20 +220,23 @@ if __name__ == "__main__":
     add_object("of_table_63", of_table_63_pos, of_table_63_quat, of_table_63_size)
     add_object("sr_table_333", sr_table_333_pos, sr_table_333_quat, sr_table_333_size)
 
-    prepick_tool_pos, prepick_tool_quat = get_object_prepick(listener, box_pos, box_quat)
-    prepick_mat = get_matrix_from_pose(prepick_tool_pos, prepick_tool_quat)
-    pick_tool_pos, pick_tool_quat = copy.deepcopy(prepick_tool_pos), copy.deepcopy(prepick_tool_quat)
-    pick_tool_pos -= pick_diff
+    box_pose = get_matrix_from_pose(box_pos, box_quat)
+    above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
+    above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
+    pick_box_tool_pose = pose_by_diff(above_box_tool_pose, pick_diff, id_quat)
+    holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
 
-    holding_pos_transform = [-0.3, 0, 0]
-    holding_quat_transform = [0, 0, 0, 1]
-    holding_transform_mat = get_matrix_from_pose(holding_pos_transform, holding_quat_transform)
-    holding_mat = np.dot(prepick_mat, holding_transform_mat)
-    holding_pose_pos, holding_pose_quat = get_pose_from_matrix(holding_mat)
+    # behind and left
+    stk111_pose = get_matrix_from_pose(stk111_pos, stk111_quat)
+    above_111_pose = get_object_above_pose(listener, stk111_pose, preplace_diff)
+    above_111_tool_pose = center_to_tool(above_111_pose, center_to_tool_transform)
+    place_111_tool_pose = pose_by_diff(above_111_tool_pose, place_diff, id_quat)
 
-    preplace111_tool_pos, preplace111_tool_quat = get_object_prepick(listener, stk111_pos, stk111_quat)
-    place111_tool_pos, place111_tool_quat = copy.deepcopy(preplace111_tool_pos), copy.deepcopy(preplace111_tool_quat)
-    place111_tool_pos -= place_diff
+    # front and left
+    stk111_pose = get_matrix_from_pose(stk111_pos, stk111_quat)
+    above_111_pose = get_object_above_pose(listener, stk111_pose, preplace_diff)
+    above_111_tool_pose = center_to_tool(above_111_pose, center_to_tool_transform)
+    place_111_tool_pose = pose_by_diff(above_111_tool_pose, place_diff, id_quat)
 
     pose_dict = {
         "stock room table 333 front": {
@@ -256,30 +269,25 @@ if __name__ == "__main__":
             "position": box_pos,
             "orientation": box_quat
         },
-        "prepick tool pose": {
+        "above box tool pose": {
             "frame_id": "odom",
-            "position": prepick_tool_pos,
-            "orientation": prepick_tool_quat
+            "pose": above_box_tool_pose,
         },
         "pick tool pose": {
             "frame_id": "odom",
-            "position": pick_tool_pos,
-            "orientation": pick_tool_quat
+            "pose": pick_box_tool_pose,
         },
-        "preplace 111 tool pose": {
+        "above 111 tool pose": {
             "frame_id": "odom",
-            "position": preplace111_tool_pos,
-            "orientation": preplace111_tool_quat
+            "pose": above_111_tool_pose,
         },
         "place 111 tool pose": {
             "frame_id": "odom",
-            "position": place111_tool_pos,
-            "orientation": place111_tool_quat
+            "pose": place_111_tool_pose,
         },
         "holding pose": {
             "frame_id": "odom",
-            "position": holding_pose_pos,
-            "orientation": holding_pose_quat
+            "pose": holding_pose,
         },
     }
 

@@ -8,7 +8,7 @@ import tf
 from tf.transformations import translation_matrix, quaternion_matrix, quaternion_from_matrix, translation_from_matrix
 
 
-def get_pose_from_matrix(obj_mat):
+def get_pos_and_quat_from_matrix(obj_mat):
     pos = translation_from_matrix(obj_mat)
     quat = quaternion_from_matrix(obj_mat)
     return pos, quat
@@ -49,11 +49,9 @@ def get_matrix_from_pose(pos, quat):
     return p_mat
 
 
-def get_object_prepick(listener, obj_pos, obj_quat, prepick_diff):
+def get_object_above_pose(listener, obj_pose, prepick_diff):
     m_new = np.eye(4, 4)
-
-    # sr_table_333_front_mat = get_matrix_from_pose(sr_table_333_front_pos, sr_table_333_front_quat)
-    # sr_table_333_front_x = sr_table_333_front_mat[0:3, 0]
+    obj_pos, obj_quat = get_pos_and_quat_from_matrix(obj_pose)
 
     bf_pos, bf_quat = query_pose(listener, "odom", "base_footprint")
     bf_frame_mat = get_matrix_from_pose(bf_pos, bf_quat)
@@ -113,9 +111,21 @@ def get_object_prepick(listener, obj_pos, obj_quat, prepick_diff):
 
     prepick_transform_mat = get_matrix_from_pose(prepick_diff, [0, 0, 0, 1])
     prepick_mat = np.dot(prepick_mat, prepick_transform_mat)
-    prepick_pose_pos, prepick_pose_quat = get_pose_from_matrix(prepick_mat)
+    # prepick_pose_pos, prepick_pose_quat = get_pose_from_matrix(prepick_mat)
 
-    return prepick_pose_pos, prepick_pose_quat
+    return prepick_mat
+
+
+def pose_by_diff(pose_mat, pos_diff, quat_diff):
+    diff_mat = get_matrix_from_pose(pos_diff, quat_diff)
+    # pose_mat = get_matrix_from_pose(pose_pos, pose_quat)
+    transformed_mat = np.dot(pose_mat, diff_mat)
+    return transformed_mat
+
+
+def center_to_tool(center_pose, center_to_tool_transform):
+    res = np.dot(center_pose, center_to_tool_transform)
+    return res
 
     # angle = angle_between(sr_table_333_front_x, tube_x)
     #

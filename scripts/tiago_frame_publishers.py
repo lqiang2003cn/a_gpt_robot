@@ -8,7 +8,9 @@ import tf
 import tf2_ros
 from geometry_msgs.msg import TransformStamped, PoseStamped
 from tf.transformations import *
-from utils import query_pose, angle_between
+
+from tiago_services import get_object_prepick
+from utils import query_pose
 
 
 def static_transform_for_tool(parent_frame, child_frame, obj_pose):
@@ -59,37 +61,39 @@ if __name__ == '__main__':
         rate = rospy.Rate(10)
         broadcaster = tf2_ros.StaticTransformBroadcaster()
         listener = tf.TransformListener()
+        prepick_diff = np.array([0, 0, -0.25])
 
         tube_pos, tube_quat = query_pose(listener, "odom", "tube_frame")
-        tube_frame_mat = get_matrix_from_pose(tube_pos, tube_quat)
-
-        bf_pos, bf_quat = query_pose(listener, "odom", "base_footprint")
-        bf_frame_mat = get_matrix_from_pose(bf_pos, bf_quat)
-
-        gg_pos, gg_quat = query_pose(listener, "odom", "gripper_left_grasping_frame")
-        gg_frame_mat = get_matrix_from_pose(gg_pos, gg_quat)
+        # tube_frame_mat = get_matrix_from_pose(tube_pos, tube_quat)
+        #
+        # bf_pos, bf_quat = query_pose(listener, "odom", "base_footprint")
+        # bf_frame_mat = get_matrix_from_pose(bf_pos, bf_quat)
+        #
+        # gg_pos, gg_quat = query_pose(listener, "odom", "gripper_left_grasping_frame")
+        # gg_frame_mat = get_matrix_from_pose(gg_pos, gg_quat)
         while not rospy.is_shutdown():
-            m_new = numpy.eye(4, 4)
-
-            tube_x = tube_frame_mat[0:3, 0]
-            tube_y = tube_frame_mat[0:3, 1]
-            tube_z = tube_frame_mat[0:3, 2]
-
-            bf_x = bf_frame_mat[0:3, 0]
-
-            angle = angle_between(bf_x, tube_x)
-
-            if angle < math.pi / 2:
-                m_new[0:3, 0] = tube_x
-                m_new[0:3, 1] = -tube_y
-                m_new[0:3, 2] = -tube_z
-            else:
-                m_new[0:3, 0] = -tube_x
-                m_new[0:3, 1] = tube_y
-                m_new[0:3, 2] = -tube_z
-
-            prepick_pos = tube_pos + np.array([0, 0, 0.2])
-            prepick_quat = quaternion_from_matrix(m_new)
+            prepick_pos, prepick_quat = get_object_prepick(listener, tube_pos, tube_quat, prepick_diff)
+            # m_new = numpy.eye(4, 4)
+            #
+            # tube_x = tube_frame_mat[0:3, 0]
+            # tube_y = tube_frame_mat[0:3, 1]
+            # tube_z = tube_frame_mat[0:3, 2]
+            #
+            # bf_x = bf_frame_mat[0:3, 0]
+            #
+            # angle = angle_between(bf_x, tube_x)
+            #
+            # if angle < math.pi / 2:
+            #     m_new[0:3, 0] = tube_x
+            #     m_new[0:3, 1] = -tube_y
+            #     m_new[0:3, 2] = -tube_z
+            # else:
+            #     m_new[0:3, 0] = -tube_x
+            #     m_new[0:3, 1] = tube_y
+            #     m_new[0:3, 2] = -tube_z
+            #
+            # prepick_pos = tube_pos + np.array([0, 0, 0.2])
+            # prepick_quat = quaternion_from_matrix(m_new)
 
             prepick_transform = create_transform_stamped("odom", "prepick_pose", prepick_pos, prepick_quat)
             broadcaster.sendTransform(prepick_transform)

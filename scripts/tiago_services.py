@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import copy
-import math
 import sys
 
 import actionlib
@@ -14,9 +13,9 @@ from a_gpt_robot.srv import MovePose, MovePoseResponse
 from geometry_msgs.msg import PoseStamped
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from std_srvs.srv import Trigger, Empty
-from tf.transformations import translation_matrix, quaternion_matrix, quaternion_from_matrix, translation_from_matrix, \
-    quaternion_from_euler
-from utils import query_pose, angle_between
+from tf.transformations import quaternion_from_matrix, translation_from_matrix, quaternion_from_euler
+
+from utils import get_object_prepick, get_matrix_from_pose, get_pose_from_matrix
 
 
 def wait_for_state_update(object_name, box_is_known=False, box_is_attached=False, timeout=4):
@@ -134,44 +133,6 @@ def static_transform(parent_frame_id, child_frame_id, transform_pose):
     broadcaster.sendTransform(static_transformStamped)
 
 
-def get_matrix_from_pose(pos, quat):
-    t_mat = translation_matrix(pos)
-    q_mat = quaternion_matrix(quat)
-    p_mat = np.dot(t_mat, q_mat)
-    return p_mat
-
-
-def get_object_prepick(obj_pos, obj_quat):
-    m_new = np.eye(4, 4)
-
-    sr_table_333_front_mat = get_matrix_from_pose(sr_table_333_front_pos, sr_table_333_front_quat)
-    sr_table_333_front_x = sr_table_333_front_mat[0:3, 0]
-
-    tube_frame_mat = get_matrix_from_pose(obj_pos, obj_quat)
-    tube_x = tube_frame_mat[0:3, 0]
-    tube_y = tube_frame_mat[0:3, 1]
-    tube_z = tube_frame_mat[0:3, 2]
-
-    angle = angle_between(sr_table_333_front_x, tube_x)
-
-    if angle < math.pi / 2:
-        m_new[0:3, 0] = tube_x
-        m_new[0:3, 1] = -tube_y
-        m_new[0:3, 2] = -tube_z
-    else:
-        m_new[0:3, 0] = -tube_x
-        m_new[0:3, 1] = tube_y
-        m_new[0:3, 2] = -tube_z
-
-    prepick_pos = obj_pos + prepick_diff
-    prepick_quat = quaternion_from_matrix(m_new)
-
-    prepick_frame_mat = get_matrix_from_pose(prepick_pos, prepick_quat)
-    prepick_to_tool_mat = get_matrix_from_pose(gripper_center_to_tool_pos, gripper_center_to_tool_quat)
-    tool_frame_mat = np.dot(prepick_frame_mat, prepick_to_tool_mat)
-    return get_pose_from_matrix(tool_frame_mat)
-
-
 def add_object(object_name, object_pos, object_euler, object_size, timeout=4):
     object_pose = geometry_msgs.msg.PoseStamped()
     object_pose.header.frame_id = "odom"
@@ -188,12 +149,6 @@ def add_object(object_name, object_pos, object_euler, object_size, timeout=4):
 
     scene.add_box(object_name, object_pose, size=object_size)
     return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
-
-
-def get_pose_from_matrix(obj_mat):
-    pos = translation_from_matrix(obj_mat)
-    quat = quaternion_from_matrix(obj_mat)
-    return pos, quat
 
 
 if __name__ == "__main__":
@@ -255,7 +210,7 @@ if __name__ == "__main__":
     add_object("of_table_63", of_table_63_pos, of_table_63_quat, of_table_63_size)
     add_object("sr_table_333", sr_table_333_pos, sr_table_333_quat, sr_table_333_size)
 
-    prepick_tool_pos, prepick_tool_quat = get_object_prepick(box_pos, box_quat)
+    prepick_tool_pos, prepick_tool_quat = get_object_prepick(listener, box_pos, box_quat)
     prepick_mat = get_matrix_from_pose(prepick_tool_pos, prepick_tool_quat)
     pick_tool_pos, pick_tool_quat = copy.deepcopy(prepick_tool_pos), copy.deepcopy(prepick_tool_quat)
     pick_tool_pos -= pick_diff
@@ -266,7 +221,7 @@ if __name__ == "__main__":
     holding_mat = np.dot(prepick_mat, holding_transform_mat)
     holding_pose_pos, holding_pose_quat = get_pose_from_matrix(holding_mat)
 
-    preplace111_tool_pos, preplace111_tool_quat = get_object_prepick(stk111_pos, stk111_quat)
+    preplace111_tool_pos, preplace111_tool_quat = get_object_prepick(listener, stk111_pos, stk111_quat)
     place111_tool_pos, place111_tool_quat = copy.deepcopy(preplace111_tool_pos), copy.deepcopy(preplace111_tool_quat)
     place111_tool_pos -= place_diff
 

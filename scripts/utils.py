@@ -42,7 +42,7 @@ def query_pose(listener, target_frame, source_frame):
     return pos, rot
 
 
-def get_matrix_from_pose(pos, quat):
+def get_matrix_from_pos_and_quat(pos, quat):
     t_mat = translation_matrix(pos)
     q_mat = quaternion_matrix(quat)
     p_mat = np.dot(t_mat, q_mat)
@@ -54,15 +54,11 @@ def get_object_above_pose(listener, obj_pose, prepick_diff):
     obj_pos, obj_quat = get_pos_and_quat_from_matrix(obj_pose)
 
     bf_pos, bf_quat = query_pose(listener, "odom", "base_footprint")
-    bf_frame_mat = get_matrix_from_pose(bf_pos, bf_quat)
+    bf_frame_mat = get_matrix_from_pos_and_quat(bf_pos, bf_quat)
     bf_x = bf_frame_mat[0:3, 0]
-    bf_y = bf_frame_mat[0:3, 1]
     bf_z = bf_frame_mat[0:3, 2]
 
-    tube_frame_mat = get_matrix_from_pose(obj_pos, obj_quat)
-    tube_x = tube_frame_mat[0:3, 0]
-    tube_y = tube_frame_mat[0:3, 1]
-    tube_z = tube_frame_mat[0:3, 2]
+    tube_frame_mat = get_matrix_from_pos_and_quat(obj_pos, obj_quat)
 
     # up axis
     up_axis = -1
@@ -97,19 +93,13 @@ def get_object_above_pose(listener, obj_pose, prepick_diff):
                 else:
                     front_direction = -1
 
-    # side_axis
-    side_axis = -1
-    for i in range(3):
-        if i != up_axis and i != front_axis:
-            side_axis = i
-
     m_new[0:3, 0] = tube_frame_mat[0:3, front_axis] * front_direction
     m_new[0:3, 2] = -1 * tube_frame_mat[0:3, up_axis] * up_direction
     m_new[0:3, 1] = np.cross(m_new[0:3, 2], m_new[0:3, 0])
     m_new_quat = quaternion_from_matrix(m_new)
-    prepick_mat = get_matrix_from_pose(obj_pos, m_new_quat)
+    prepick_mat = get_matrix_from_pos_and_quat(obj_pos, m_new_quat)
 
-    prepick_transform_mat = get_matrix_from_pose(prepick_diff, [0, 0, 0, 1])
+    prepick_transform_mat = get_matrix_from_pos_and_quat(prepick_diff, [0, 0, 0, 1])
     prepick_mat = np.dot(prepick_mat, prepick_transform_mat)
     # prepick_pose_pos, prepick_pose_quat = get_pose_from_matrix(prepick_mat)
 
@@ -117,7 +107,7 @@ def get_object_above_pose(listener, obj_pose, prepick_diff):
 
 
 def pose_by_diff(pose_mat, pos_diff, quat_diff):
-    diff_mat = get_matrix_from_pose(pos_diff, quat_diff)
+    diff_mat = get_matrix_from_pos_and_quat(pos_diff, quat_diff)
     # pose_mat = get_matrix_from_pose(pose_pos, pose_quat)
     transformed_mat = np.dot(pose_mat, diff_mat)
     return transformed_mat

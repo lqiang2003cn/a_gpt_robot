@@ -14,7 +14,7 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from std_srvs.srv import Trigger, Empty
 from tf.transformations import quaternion_from_euler
 
-from utils import get_object_above_pose, get_matrix_from_pose, get_pos_and_quat_from_matrix, center_to_tool, pose_by_diff
+from utils import get_object_above_pose, get_matrix_from_pos_and_quat, get_pos_and_quat_from_matrix, center_to_tool, pose_by_diff
 
 
 def wait_for_state_update(object_name, box_is_known=False, box_is_attached=False, timeout=4):
@@ -63,12 +63,19 @@ def move_base_to_pose(srv_request):
     return MovePoseResponse(1)
 
 
+def cal_pose_stamped(pose_str):
+    if pose_str == "above box tool pose":
+        above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
+        above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
+        return above_box_tool_pose, "odom"
+
+
 def move_arm_to_pose(srv_request):
-    arm_pose = pose_dict[srv_request.pose_str]
-    pose_pos, pose_quat = get_pos_and_quat_from_matrix(arm_pose["pose"])
+    pose, frame_id = cal_pose_stamped(srv_request.pose_str)
+    pose_pos, pose_quat = get_pos_and_quat_from_matrix(pose)
 
     pose_goal = PoseStamped()
-    pose_goal.header.frame_id = arm_pose["frame_id"]
+    pose_goal.header.frame_id = frame_id
     pose_goal.pose.position.x = pose_pos[0]
     pose_goal.pose.position.y = pose_pos[1]
     pose_goal.pose.position.z = pose_pos[2]
@@ -164,22 +171,21 @@ if __name__ == "__main__":
 
     id_quat = np.array([0, 0, 0, 1])
     table_x_diff = 1.15
-    prepick_diff = np.array([0, 0, 0.25])
-    preplace_diff = np.array([0, 0, 0.25])
+    prepick_diff = np.array([0, 0, -0.25])
+    preplace_diff = np.array([0, 0, -0.25])
     pick_diff = np.array([0, 0, 0.17])
     place_diff = np.array([0, 0, 0.14])
     holding_diff = np.array([-0.3, 0, 0])
     gripper_center_to_tool_pos = np.array([-0.201, 0, 0])
     gripper_center_to_tool_quat = np.array([-0.707, -0.000, -0.000, 0.707])
-    center_to_tool_transform = get_matrix_from_pose(gripper_center_to_tool_pos, gripper_center_to_tool_quat)
+    center_to_tool_transform = get_matrix_from_pos_and_quat(gripper_center_to_tool_pos, gripper_center_to_tool_quat)
 
     # stock room
     sr_table_333_pos = np.array([-4.2, 8, 0.4])
     sr_table_333_quat = quaternion_from_euler(0, 0, 0)
     sr_table_333_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
-    box_pos, box_quat, box_size = np.array([-4, 8, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
-    sr_table_333_front_pos = np.array([-4.2 + table_x_diff, 8, 0])
-    sr_table_333_front_quat = np.array([0, 0, 1, 0])
+    box_pos, box_quat, box_size = np.array([-3.95, 8, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
+    sr_table_333_front_pose = get_matrix_from_pos_and_quat(np.array([-4.2 + table_x_diff, 8, 0]), np.array([0, 0, 1, 0]))
 
     # office room
     # front and left
@@ -187,24 +193,22 @@ if __name__ == "__main__":
     of_table_238_quat = quaternion_from_euler(0, 0, 0)
     of_table_238_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
     stk238_pos, stk238_quat, stk238_size = np.array([4, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
-    stk238_pose = get_matrix_from_pose(stk238_pos, stk238_quat)
+    stk238_pose = get_matrix_from_pos_and_quat(stk238_pos, stk238_quat)
     above_238_pose = get_object_above_pose(listener, stk238_pose, preplace_diff)
     above_238_tool_pose = center_to_tool(above_238_pose, center_to_tool_transform)
     place_238_tool_pose = pose_by_diff(above_238_tool_pose, place_diff, id_quat)
-    of_table_238_front_pos = np.array([4.2 - table_x_diff, 3, 0])
-    of_table_238_front_quat = np.array([0, 0, 0, 1])
+    of_table_238_front_pose = get_matrix_from_pos_and_quat(np.array([4.2 - table_x_diff, 3, 0]), np.array([0, 0, 0, 1]))
 
     # behind and left
     of_table_63_pos = np.array([-4.2, 3, 0.4])
     of_table_63_quat = quaternion_from_euler(0, 0, 0)
     of_table_63_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
     stk63_pos, stk63_quat, stk63_size = np.array([-4, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
-    stk63_pose = get_matrix_from_pose(stk63_pos, stk63_quat)
+    stk63_pose = get_matrix_from_pos_and_quat(stk63_pos, stk63_quat)
     above_63_pose = get_object_above_pose(listener, stk63_pose, preplace_diff)
     above_63_tool_pose = center_to_tool(above_63_pose, center_to_tool_transform)
     place_63_tool_pose = pose_by_diff(above_63_tool_pose, place_diff, id_quat)
-    of_table_63_front_pos = np.array([-4.2 + table_x_diff, 3, 0])
-    of_table_63_front_quat = np.array([0, 0, 1, 0])
+    of_table_63_front_pose = get_matrix_from_pos_and_quat(np.array([-4.2 + table_x_diff, 3, 0]), np.array([0, 0, 1, 0]))
 
     # front and right
     of_table_111_pos = np.array([4.2, -3, 0.4])
@@ -223,55 +227,41 @@ if __name__ == "__main__":
     add_object("of_table_63", of_table_63_pos, of_table_63_quat, of_table_63_size)
     add_object("sr_table_333", sr_table_333_pos, sr_table_333_quat, sr_table_333_size)
 
-    box_pose = get_matrix_from_pose(box_pos, box_quat)
-    above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
-    above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
-    pick_box_tool_pose = pose_by_diff(above_box_tool_pose, pick_diff, id_quat)
-    holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
+    box_pose = get_matrix_from_pos_and_quat(box_pos, box_quat)
+
+    # above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
+    # pick_box_tool_pose = pose_by_diff(above_box_tool_pose, pick_diff, id_quat)
+    # holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
 
     pose_dict = {
         "stock room table 333 front": {
             "frame_id": "odom",
-            "position": sr_table_333_front_pos,
-            "orientation": sr_table_333_front_quat
+            "pose": sr_table_333_front_pose
         },
-        "office room table 111 front": {
+        "office room table 238 front": {
             "frame_id": "odom",
-            "position": of_table_111_front_pos,
-            "orientation": of_table_111_front_quat
+            "pose": of_table_238_front_pose
         },
-        "office room table 238": {
-            "frame_id": "map",
-            "position": of_table_238_front_pos,
-            "orientation": of_table_238_front_quat
-        },
-        "office room table 26 front": {
-            "frame_id": "map",
-            "position": of_table_26_pos,
-            "orientation": of_table_26_quat
-        },
-        "office room table 63": {
-            "frame_id": "map",
-            "position": of_table_63_pos,
-            "orientation": of_table_63_quat
-        },
-        "orange pose": {
+        "office room table 63 front": {
             "frame_id": "odom",
-            "position": box_pos,
-            "orientation": box_quat
+            "pose": of_table_63_front_pose
         },
-        "above box tool pose": {
+        "box pose": {
             "frame_id": "odom",
-            "pose": above_box_tool_pose,
+            "pose": box_pose
         },
-        "pick tool pose": {
-            "frame_id": "odom",
-            "pose": pick_box_tool_pose,
-        },
-        "holding pose": {
-            "frame_id": "odom",
-            "pose": holding_pose,
-        },
+        # "above box tool pose": {
+        #     "frame_id": "odom",
+        #     "pose": above_box_tool_pose,
+        # },
+        # "pick tool pose": {
+        #     "frame_id": "odom",
+        #     "pose": pick_box_tool_pose,
+        # },
+        # "holding pose": {
+        #     "frame_id": "odom",
+        #     "pose": holding_pose,
+        # },
         "above 238 tool pose": {
             "frame_id": "odom",
             "pose": above_238_tool_pose,

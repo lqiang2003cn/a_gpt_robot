@@ -281,7 +281,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>4 -3 0.815 0 0 0</pose>
+      <pose frame=''>3.9 -3 0.815 0 0 0</pose>
     </model>
 
     <model name='office_room_table_26'>
@@ -535,7 +535,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-4 -3 0.815 0 0 0</pose>
+      <pose frame=''>-3.9 -3 0.815 0 0 0</pose>
     </model>
 
     <model name='office_room_table_63'>
@@ -789,7 +789,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-4 3 0.815 0 0 0</pose>
+      <pose frame=''>-3.9 3 0.815 0 0 0</pose>
     </model>
 
     <model name='office_room_table_238'>
@@ -1043,7 +1043,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>4 3 0.815 0 0 0</pose>
+      <pose frame=''>3.9 3 0.815 0 0 0</pose>
     </model>
 
     <model name='office_room_table_333'>
@@ -1309,7 +1309,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-3.95 8 0.865 0 0 0</pose>
+      <pose frame=''>-3.9 8 0.865 0 0 0</pose>
     </model>
 
     <model name="wall_1_model">

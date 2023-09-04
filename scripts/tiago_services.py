@@ -78,10 +78,12 @@ def cal_pose_stamped(pose_str):
         pick_box_tool_pose = pose_by_diff(above_box_tool_pose, pick_diff, id_quat)
         return pick_box_tool_pose, "odom"
     if pose_str == "holding pose":
-        above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
-        above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
-        holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
-        return holding_pose, "odom"
+        # above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
+        # above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
+        # holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
+        # return holding_pose, "odom"
+        holding_pose = get_matrix_from_pos_and_quat(np.array([0.1, 0.3, 0.8]), quaternion_from_euler(1.57, 0, 0))
+        return holding_pose, "base_footprint"
     if pose_str == "above 238 tool pose":
         above_238_pose = get_object_above_pose(listener, stk238_pose, preplace_diff)
         above_238_tool_pose = center_to_tool(above_238_pose, center_to_tool_transform)

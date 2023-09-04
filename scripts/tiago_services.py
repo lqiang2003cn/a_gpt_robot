@@ -64,10 +64,33 @@ def move_base_to_pose(srv_request):
 
 
 def cal_pose_stamped(pose_str):
+    global above_box_tool_pose, pick_box_tool_pose, holding_pose
+    global above_238_pose, above_238_tool_pose, place_238_tool_pose
+    above_box_tool_pose, pick_box_tool_pose, holding_pose = None, None, None
+    above_238_pose, above_238_tool_pose, place_238_tool_pose = None, None, None
     if pose_str == "above box tool pose":
         above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
         above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
         return above_box_tool_pose, "odom"
+    if pose_str == "pick tool pose":
+        above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
+        above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
+        pick_box_tool_pose = pose_by_diff(above_box_tool_pose, pick_diff, id_quat)
+        return pick_box_tool_pose, "odom"
+    if pose_str == "holding pose":
+        above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
+        above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
+        holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
+        return holding_pose, "odom"
+    if pose_str == "above 238 tool pose":
+        above_238_pose = get_object_above_pose(listener, stk238_pose, preplace_diff)
+        above_238_tool_pose = center_to_tool(above_238_pose, center_to_tool_transform)
+        return above_238_tool_pose, "odom"
+    if pose_str == "place 238 tool pose":
+        above_238_pose = get_object_above_pose(listener, stk238_pose, preplace_diff)
+        above_238_tool_pose = center_to_tool(above_238_pose, center_to_tool_transform)
+        place_238_tool_pose = pose_by_diff(above_238_tool_pose, place_diff, id_quat)
+        return place_238_tool_pose, "odom"
 
 
 def move_arm_to_pose(srv_request):
@@ -159,6 +182,8 @@ def add_object(object_name, object_pos, object_euler, object_size, timeout=4):
     return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
 
 
+global above_box_tool_pose, pick_box_tool_pose, holding_pose
+
 if __name__ == "__main__":
     rospy.init_node('create_tiago_services')
     moveit_commander.roscpp_initialize(sys.argv)
@@ -173,9 +198,11 @@ if __name__ == "__main__":
     table_x_diff = 1.15
     prepick_diff = np.array([0, 0, -0.25])
     preplace_diff = np.array([0, 0, -0.25])
-    pick_diff = np.array([0, 0, 0.17])
-    place_diff = np.array([0, 0, 0.14])
-    holding_diff = np.array([-0.3, 0, 0])
+
+    pick_diff = np.array([0, -0.17, 0])
+    place_diff = np.array([0, -0.14, 0])
+
+    holding_diff = np.array([-0.2, 0, 0])
     gripper_center_to_tool_pos = np.array([-0.201, 0, 0])
     gripper_center_to_tool_quat = np.array([-0.707, -0.000, -0.000, 0.707])
     center_to_tool_transform = get_matrix_from_pos_and_quat(gripper_center_to_tool_pos, gripper_center_to_tool_quat)
@@ -184,7 +211,7 @@ if __name__ == "__main__":
     sr_table_333_pos = np.array([-4.2, 8, 0.4])
     sr_table_333_quat = quaternion_from_euler(0, 0, 0)
     sr_table_333_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
-    box_pos, box_quat, box_size = np.array([-3.95, 8, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
+    box_pos, box_quat, box_size = np.array([-3.9, 8, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
     sr_table_333_front_pose = get_matrix_from_pos_and_quat(np.array([-4.2 + table_x_diff, 8, 0]), np.array([0, 0, 1, 0]))
 
     # office room
@@ -192,7 +219,7 @@ if __name__ == "__main__":
     of_table_238_pos = np.array([4.2, 3, 0.4])
     of_table_238_quat = quaternion_from_euler(0, 0, 0)
     of_table_238_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
-    stk238_pos, stk238_quat, stk238_size = np.array([4, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
+    stk238_pos, stk238_quat, stk238_size = np.array([3.9, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
     stk238_pose = get_matrix_from_pos_and_quat(stk238_pos, stk238_quat)
     above_238_pose = get_object_above_pose(listener, stk238_pose, preplace_diff)
     above_238_tool_pose = center_to_tool(above_238_pose, center_to_tool_transform)
@@ -203,7 +230,7 @@ if __name__ == "__main__":
     of_table_63_pos = np.array([-4.2, 3, 0.4])
     of_table_63_quat = quaternion_from_euler(0, 0, 0)
     of_table_63_size = np.array([0.8 + 0.1, 1 + 1, 0.815 + 0.05])
-    stk63_pos, stk63_quat, stk63_size = np.array([-4, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
+    stk63_pos, stk63_quat, stk63_size = np.array([-3.9, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
     stk63_pose = get_matrix_from_pos_and_quat(stk63_pos, stk63_quat)
     above_63_pose = get_object_above_pose(listener, stk63_pose, preplace_diff)
     above_63_tool_pose = center_to_tool(above_63_pose, center_to_tool_transform)
@@ -262,14 +289,14 @@ if __name__ == "__main__":
         #     "frame_id": "odom",
         #     "pose": holding_pose,
         # },
-        "above 238 tool pose": {
-            "frame_id": "odom",
-            "pose": above_238_tool_pose,
-        },
-        "place 238 tool pose": {
-            "frame_id": "odom",
-            "pose": place_238_tool_pose,
-        },
+        # "above 238 tool pose": {
+        #     "frame_id": "odom",
+        #     "pose": above_238_tool_pose,
+        # },
+        # "place 238 tool pose": {
+        #     "frame_id": "odom",
+        #     "pose": place_238_tool_pose,
+        # },
         "above 63 tool pose": {
             "frame_id": "odom",
             "pose": above_63_tool_pose,

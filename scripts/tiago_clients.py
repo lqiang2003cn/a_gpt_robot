@@ -27,16 +27,16 @@ if __name__ == "__main__":
     call_service_func("open_gripper", {})
     call_service_func("move_base_to_pose", {"pose_str": "stock room table 333 front"})
     call_service_func("move_arm_to_pose", {"pose_str": "above box tool pose"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "pick tool pose"})
-    # call_service_func("close_gripper", {})
-    # call_service_func("move_arm_to_pose", {"pose_str": "prepick tool pose"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
-    #
-    # call_service_func("move_base_to_pose", {"pose_str": "office room table 238 front"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "above 238 tool pose"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "place 238 tool pose"})
-    # call_service_func("open_gripper", {})
-    # call_service_func("move_arm_to_pose", {"pose_str": "above 238 tool pose"})
+    call_service_func("move_arm_to_pose", {"pose_str": "pick tool pose"})
+    call_service_func("close_gripper", {})
+    call_service_func("move_arm_to_pose", {"pose_str": "above box tool pose"})
+    call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
+
+    call_service_func("move_base_to_pose", {"pose_str": "office room table 238 front"})
+    call_service_func("move_arm_to_pose", {"pose_str": "above 238 tool pose"})
+    call_service_func("move_arm_to_pose", {"pose_str": "place 238 tool pose"})
+    call_service_func("open_gripper", {})
+    call_service_func("move_arm_to_pose", {"pose_str": "above 238 tool pose"})
     # call_service_func("move_base_to_pose", {"pose_str": "stock room table 333 front"})
 
 

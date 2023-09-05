@@ -280,14 +280,13 @@ if __name__ == "__main__":
     gripper_group = moveit_commander.MoveGroupCommander("gripper_left")
     listener = tf.TransformListener()
 
+    # parameters
     id_quat = np.array([0, 0, 0, 1])
     table_x_diff = 1.3
     prepick_diff = np.array([0, 0, -0.27])
     preplace_diff = np.array([0, 0, -0.27])
-
     pick_diff = np.array([0, -0.20, 0])
     place_diff = np.array([0, -0.16, 0])
-
     holding_diff = np.array([-0.2, 0, 0])
     gripper_center_to_tool_pos = np.array([-0.201, 0, 0])
     gripper_center_to_tool_quat = np.array([-0.707, -0.000, -0.000, 0.707])

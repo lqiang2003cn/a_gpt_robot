@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import copy
 import sys
 
 import actionlib
@@ -11,6 +12,7 @@ import tf2_ros
 from a_gpt_robot.srv import MovePose, MovePoseResponse
 from geometry_msgs.msg import PoseStamped
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from moveit_msgs.msg import OrientationConstraint, Constraints
 from std_srvs.srv import Trigger, Empty
 from tf.transformations import quaternion_from_euler
 
@@ -110,6 +112,59 @@ def cal_pose_stamped(pose_str):
         return place_238_tool_pose, "odom"
 
 
+def move_arm_to_pose_cartesian(srv_request):
+    scale = 1
+    waypoints = []
+    wpose = move_group.get_current_pose().pose
+    # wpose.position.z -= scale * 0.1  # First move up (z)
+    wpose.position.z += scale * 0.2  # and sideways (y)
+    waypoints.append(copy.deepcopy(wpose))
+
+    # wpose.position.x += scale * 0.1  # Second move forward/backwards in (x)
+    # waypoints.append(copy.deepcopy(wpose))
+    #
+    # wpose.position.y -= scale * 0.1  # Third move sideways (y)
+    # waypoints.append(copy.deepcopy(wpose))
+    plan, fraction = move_group.compute_cartesian_path(waypoints, 0.01, 0.0)
+    move_group.execute(plan, wait=True)
+
+
+def move_arm_to_pose_constraint(srv_request):
+    pose, frame_id = cal_pose_stamped(srv_request.pose_str)
+    pose_pos, pose_quat = get_pos_and_quat_from_matrix(pose)
+    curr_pose = move_group.get_current_pose().pose
+
+    constraints = Constraints()
+    constraints.name = "upright"
+    orientation_constraint = OrientationConstraint()
+    orientation_constraint.header.frame_id = frame_id
+    orientation_constraint.link_name = move_group.get_end_effector_link()
+    orientation_constraint.orientation = curr_pose.orientation
+    orientation_constraint.absolute_x_axis_tolerance = 3.14
+    orientation_constraint.absolute_y_axis_tolerance = 3.14
+    orientation_constraint.absolute_z_axis_tolerance = 0.2
+    orientation_constraint.weight = 1
+    constraints.orientation_constraints.append(orientation_constraint)
+    move_group.set_path_constraints(constraints)
+
+    pose_goal = PoseStamped()
+    pose_goal.header.frame_id = frame_id
+    pose_goal.pose.position.x = pose_pos[0]
+    pose_goal.pose.position.y = pose_pos[1]
+    pose_goal.pose.position.z = pose_pos[2]
+    # pose_goal.pose.orientation = curr_pose.orientation
+    pose_goal.pose.orientation.x = pose_quat[0]
+    pose_goal.pose.orientation.y = pose_quat[1]
+    pose_goal.pose.orientation.z = pose_quat[2]
+    pose_goal.pose.orientation.w = pose_quat[3]
+    move_group.set_pose_target(pose_goal)
+
+    move_group.go(wait=True)
+    move_group.stop()
+    move_group.clear_path_constraints()
+    move_group.clear_pose_targets()
+
+
 def move_arm_to_pose(srv_request):
     pose, frame_id = cal_pose_stamped(srv_request.pose_str)
     pose_pos, pose_quat = get_pos_and_quat_from_matrix(pose)
@@ -152,11 +207,22 @@ def open_gripper(trigger):
         print "Service call failed: %s" % e
 
 
+def attach_box(srv_request):
+    eef_link = move_group.get_end_effector_link()
+    grasping_group = 'gripper_left'
+    touch_links = robot.get_link_names(group=grasping_group)
+    scene.attach_box(eef_link, box_name, touch_links=touch_links)
+    return wait_for_state_update(box_name, box_is_known=True, timeout=5)
+
+
 def create_tiago_services():
+    rospy.Service('move_arm_to_pose_constraint', MovePose, move_arm_to_pose_constraint)
+    rospy.Service('move_arm_to_pose_cartesian', MovePose, move_arm_to_pose_cartesian)
     rospy.Service('move_base_to_pose', MovePose, move_base_to_pose)
     rospy.Service('move_arm_to_pose', MovePose, move_arm_to_pose)
     rospy.Service('close_gripper', Trigger, close_gripper)
     rospy.Service('open_gripper', Trigger, open_gripper)
+    rospy.Service('attach_box', MovePose, attach_box)
     print "tiago services are ready"
     rospy.spin()
 
@@ -219,7 +285,7 @@ if __name__ == "__main__":
     preplace_diff = np.array([0, 0, -0.27])
 
     pick_diff = np.array([0, -0.20, 0])
-    place_diff = np.array([0, -0.15, 0])
+    place_diff = np.array([0, -0.16, 0])
 
     holding_diff = np.array([-0.2, 0, 0])
     gripper_center_to_tool_pos = np.array([-0.201, 0, 0])
@@ -266,7 +332,8 @@ if __name__ == "__main__":
     of_table_26_quat = quaternion_from_euler(0, 0, 0)
     of_table_26_size = np.array([0.8 + 0.3, 1 + 1, 0.815 + 0.05])
 
-    add_object("odom", "box", box_pos, box_quat, box_size)
+    box_name = "box"
+    add_object("odom", box_name, box_pos, box_quat, box_size)
     add_object("odom", "of_table_111", of_table_111_pos, of_table_111_quat, of_table_111_size)
     add_object("odom", "of_table_238", of_table_238_pos, of_table_238_quat, of_table_238_size)
     add_object("odom", "of_table_26", of_table_26_pos, of_table_26_quat, of_table_26_size)
@@ -274,57 +341,4 @@ if __name__ == "__main__":
     add_object("odom", "sr_table_333", sr_table_333_pos, sr_table_333_quat, sr_table_333_size)
 
     box_pose = get_matrix_from_pos_and_quat(box_pos, box_quat)
-
-    # above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
-    # pick_box_tool_pose = pose_by_diff(above_box_tool_pose, pick_diff, id_quat)
-    # holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
-
-    pose_dict = {
-        # "stock room table 333 front": {
-        #     "frame_id": "odom",
-        #     "pose": sr_table_333_front_pose
-        # },
-        # "office room table 238 front": {
-        #     "frame_id": "odom",
-        #     "pose": of_table_238_front_pose
-        # },
-        # "office room table 63 front": {
-        #     "frame_id": "odom",
-        #     "pose": of_table_63_front_pose
-        # },
-        # "box pose": {
-        #     "frame_id": "odom",
-        #     "pose": box_pose
-        # },
-        # "above box tool pose": {
-        #     "frame_id": "odom",
-        #     "pose": above_box_tool_pose,
-        # },
-        # "pick tool pose": {
-        #     "frame_id": "odom",
-        #     "pose": pick_box_tool_pose,
-        # },
-        # "holding pose": {
-        #     "frame_id": "odom",
-        #     "pose": holding_pose,
-        # },
-        # "above 238 tool pose": {
-        #     "frame_id": "odom",
-        #     "pose": above_238_tool_pose,
-        # },
-        # "place 238 tool pose": {
-        #     "frame_id": "odom",
-        #     "pose": place_238_tool_pose,
-        # },
-        # "above 63 tool pose": {
-        #     "frame_id": "odom",
-        #     "pose": above_63_tool_pose,
-        # },
-        # "place 63 tool pose": {
-        #     "frame_id": "odom",
-        #     "pose": place_63_tool_pose,
-        # },
-
-    }
-
     create_tiago_services()

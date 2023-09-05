@@ -19,52 +19,6 @@ from tf.transformations import quaternion_from_euler
 from utils import get_object_above_pose, get_matrix_from_pos_and_quat, get_pos_and_quat_from_matrix, center_to_tool, pose_by_diff
 
 
-def wait_for_state_update(object_name, box_is_known=False, box_is_attached=False, timeout=4):
-    start = rospy.get_time()
-    seconds = rospy.get_time()
-    while (seconds - start < timeout) and not rospy.is_shutdown():
-        # Test if the box is in attached objects
-        attached_objects = scene.get_attached_objects([object_name])
-        is_attached = len(attached_objects.keys()) > 0
-
-        # Test if the box is in the scene.
-        # Note that attaching the box will remove it from known_objects
-        is_known = object_name in scene.get_known_object_names()
-
-        # Test if we are in the expected state
-        if (box_is_attached == is_attached) and (box_is_known == is_known):
-            return True
-
-        # Sleep so that we give other threads time on the processor
-        rospy.sleep(0.1)
-        seconds = rospy.get_time()
-
-    # If we exited the while loop without returning then we timed out
-    return False
-
-
-def move_base_to_pose(srv_request):
-    client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-    client.wait_for_server()
-
-    pose, frame_id = cal_pose_stamped(srv_request.pose_str)
-    pose_pos, pose_quat = get_pos_and_quat_from_matrix(pose)
-
-    goal = MoveBaseGoal()
-    goal.target_pose.header.frame_id = frame_id
-    goal.target_pose.header.stamp = rospy.Time.now()
-    goal.target_pose.pose.position.x = pose_pos[0]
-    goal.target_pose.pose.position.y = pose_pos[1]
-    goal.target_pose.pose.orientation.x = pose_quat[0]
-    goal.target_pose.pose.orientation.y = pose_quat[1]
-    goal.target_pose.pose.orientation.z = pose_quat[2]
-    goal.target_pose.pose.orientation.w = pose_quat[3]
-
-    client.send_goal(goal)
-    client.wait_for_result()
-    return MovePoseResponse(1)
-
-
 def cal_pose_stamped(pose_str):
     global above_box_tool_pose, pick_box_tool_pose, holding_pose
     global above_238_pose, above_238_tool_pose, place_238_tool_pose
@@ -99,7 +53,8 @@ def cal_pose_stamped(pose_str):
         # above_box_tool_pose = center_to_tool(above_box_pose, center_to_tool_transform)
         # holding_pose = pose_by_diff(above_box_tool_pose, holding_diff, id_quat)
         # return holding_pose, "odom"
-        holding_pose = get_matrix_from_pos_and_quat(np.array([0.1, 0.3, 0.8]), quaternion_from_euler(1.57, 0, 0))
+        # holding_pose = get_matrix_from_pos_and_quat(np.array([0.1, 0.3, 0.8]), quaternion_from_euler(1.57, 0, 0))
+        holding_pose = get_matrix_from_pos_and_quat(np.array([-0.1, 0.3, 0.6]), quaternion_from_euler(1.57, 0, 0))
         return holding_pose, "base_footprint"
     if pose_str == "above 238 tool pose":
         above_238_pose = get_object_above_pose(listener, stk238_pose, preplace_diff)
@@ -110,6 +65,28 @@ def cal_pose_stamped(pose_str):
         above_238_tool_pose = center_to_tool(above_238_pose, center_to_tool_transform)
         place_238_tool_pose = pose_by_diff(above_238_tool_pose, place_diff, id_quat)
         return place_238_tool_pose, "odom"
+
+
+def move_base_to_pose(srv_request):
+    client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+    client.wait_for_server()
+
+    pose, frame_id = cal_pose_stamped(srv_request.pose_str)
+    pose_pos, pose_quat = get_pos_and_quat_from_matrix(pose)
+
+    goal = MoveBaseGoal()
+    goal.target_pose.header.frame_id = frame_id
+    goal.target_pose.header.stamp = rospy.Time.now()
+    goal.target_pose.pose.position.x = pose_pos[0]
+    goal.target_pose.pose.position.y = pose_pos[1]
+    goal.target_pose.pose.orientation.x = pose_quat[0]
+    goal.target_pose.pose.orientation.y = pose_quat[1]
+    goal.target_pose.pose.orientation.z = pose_quat[2]
+    goal.target_pose.pose.orientation.w = pose_quat[3]
+
+    client.send_goal(goal)
+    client.wait_for_result()
+    return MovePoseResponse(1)
 
 
 def move_arm_to_pose_cartesian(srv_request):
@@ -265,6 +242,30 @@ def add_object(frame_id, object_name, object_pos, object_euler, object_size, tim
     return wait_for_state_update(object_name, box_is_known=True, timeout=timeout)
 
 
+def wait_for_state_update(object_name, box_is_known=False, box_is_attached=False, timeout=4):
+    start = rospy.get_time()
+    seconds = rospy.get_time()
+    while (seconds - start < timeout) and not rospy.is_shutdown():
+        # Test if the box is in attached objects
+        attached_objects = scene.get_attached_objects([object_name])
+        is_attached = len(attached_objects.keys()) > 0
+
+        # Test if the box is in the scene.
+        # Note that attaching the box will remove it from known_objects
+        is_known = object_name in scene.get_known_object_names()
+
+        # Test if we are in the expected state
+        if (box_is_attached == is_attached) and (box_is_known == is_known):
+            return True
+
+        # Sleep so that we give other threads time on the processor
+        rospy.sleep(0.1)
+        seconds = rospy.get_time()
+
+    # If we exited the while loop without returning then we timed out
+    return False
+
+
 global above_box_tool_pose, pick_box_tool_pose, holding_pose
 global above_238_pose, above_238_tool_pose, place_238_tool_pose
 global sr_table_333_front_pose, of_table_238_front_pose
@@ -280,7 +281,7 @@ if __name__ == "__main__":
     listener = tf.TransformListener()
 
     id_quat = np.array([0, 0, 0, 1])
-    table_x_diff = 1.2
+    table_x_diff = 1.3
     prepick_diff = np.array([0, 0, -0.27])
     preplace_diff = np.array([0, 0, -0.27])
 

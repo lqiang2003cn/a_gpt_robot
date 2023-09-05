@@ -3,6 +3,7 @@ unset all_proxy && unset ALL_PROXY
 set all_proxy && set ALL_PROXY
 catkin build --jobs 8 --cmake-args "-DCMAKE_BUILD_TYPE=Debug"
 
+tiago_dual move_base configuration: pal_navigation_cfg_tiago
 
 ################################ tiago gpt ################################
 prepick tool:
@@ -16,7 +17,7 @@ rosrun a_gpt_robot tiago_services.py
 rosrun a_gpt_robot tiago_clients.py
 
 #
-rosrun tf static_transform_publisher 0.1 0.3 0.8 0 0 0 1 base_footprint holding_pose 100
+rosrun tf static_transform_publisher 0 0.3 0.6 0 0 0 1 base_footprint holding_pose 100
 
 rosrun tf static_transform_publisher -3.95, 8, 0.865 0 0 0 1 odom tube_frame 100
 rosrun tf static_transform_publisher -4, 3, 0.865 0 0 0 1 odom tube_frame 100

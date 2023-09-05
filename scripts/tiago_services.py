@@ -28,16 +28,16 @@ def cal_pose_stamped(pose_str):
 
     if pose_str == "stock room table 333 front":
         sr_table_333_front_pose = get_matrix_from_pos_and_quat(np.array([-4.2 + table_x_diff, 8, 0]), np.array([0, 0, 1, 0]))
-        return sr_table_333_front_pose, "odom"
+        return sr_table_333_front_pose, "map"
     if pose_str == "office room table 238 front":
         of_table_238_front_pose = get_matrix_from_pos_and_quat(np.array([4.2 - table_x_diff, 3, 0]), np.array([0, 0, 0, 1]))
-        return of_table_238_front_pose, "odom"
+        return of_table_238_front_pose, "map"
     if pose_str == "turn around":
         holding_pose = get_matrix_from_pos_and_quat(np.array([0.0, 0.0, 0.0]), quaternion_from_euler(0, 0, 3.14))
         return holding_pose, "base_footprint"
     if pose_str == "rest spot":
         rest_pose = get_matrix_from_pos_and_quat(np.array([0.0, 0.0, 0.0]), quaternion_from_euler(0, 0, 0))
-        return rest_pose, "odom"
+        return rest_pose, "map"
 
     if pose_str == "above box tool pose":
         above_box_pose = get_object_above_pose(listener, box_pose, prepick_diff)
@@ -297,15 +297,15 @@ if __name__ == "__main__":
     sr_table_333_pos = np.array([-4.2, 8, 0.4])
     sr_table_333_quat = quaternion_from_euler(0, 0, 0)
     sr_table_333_size = np.array([0.8 + 0.25, 1 + 1, 0.815 + 0.05])
-    box_pos, box_quat, box_size = np.array([-3.9, 8, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
+    box_pos, box_quat, box_size = np.array([-3.8, 8, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
     # sr_table_333_front_pose = get_matrix_from_pos_and_quat(np.array([-4.2 + table_x_diff, 8, 0]), np.array([0, 0, 1, 0]))
 
     # office room
     # front and left
     of_table_238_pos = np.array([4.2, 3, 0.4])
     of_table_238_quat = quaternion_from_euler(0, 0, 0)
-    of_table_238_size = np.array([0.8 + 0.25, 1 + 1, 0.815 + 0.05])
-    stk238_pos, stk238_quat, stk238_size = np.array([3.9, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
+    of_table_238_size = np.array([1.2 + 0.25, 1 + 1, 0.815 + 0.05])
+    stk238_pos, stk238_quat, stk238_size = np.array([3.7, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
     stk238_pose = get_matrix_from_pos_and_quat(stk238_pos, stk238_quat)
     above_238_pose = get_object_above_pose(listener, stk238_pose, preplace_diff)
     above_238_tool_pose = center_to_tool(above_238_pose, center_to_tool_transform)
@@ -316,7 +316,7 @@ if __name__ == "__main__":
     of_table_63_pos = np.array([-4.2, 3, 0.4])
     of_table_63_quat = quaternion_from_euler(0, 0, 0)
     of_table_63_size = np.array([0.8 + 0.25, 1 + 1, 0.815 + 0.05])
-    stk63_pos, stk63_quat, stk63_size = np.array([-3.9, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
+    stk63_pos, stk63_quat, stk63_size = np.array([-3.8, 3, 0.865]), np.array([0, 0, 0, 1]), np.array([0.05, 0.05, 0.1])
     stk63_pose = get_matrix_from_pos_and_quat(stk63_pos, stk63_quat)
     above_63_pose = get_object_above_pose(listener, stk63_pose, preplace_diff)
     above_63_tool_pose = center_to_tool(above_63_pose, center_to_tool_transform)

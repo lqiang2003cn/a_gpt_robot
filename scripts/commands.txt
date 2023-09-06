@@ -1,7 +1,7 @@
 ################################ frequently used ################################
 unset all_proxy && unset ALL_PROXY
 set all_proxy && set ALL_PROXY
-export all_proxy="socks5://10.3.100.207:8080"
+export all_proxy="socks5://192.168.50.46:10808"
 catkin build --jobs 8 --cmake-args "-DCMAKE_BUILD_TYPE=Debug"
 prompt_load_order = ['prompt_role',
                      'prompt_function',

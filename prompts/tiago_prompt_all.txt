@@ -1,9 +1,10 @@
-------------------------------------------------------
+[user]
 You are an excellent interpreter of human instructions for household tasks. Given an instruction and information
 about the working environment, you break it down into a sequence of robot actions.
+[assistant]
+Waiting for next input.
 
-
-------------------------------------------------------
+[user]
 Necessary and sufficient robot action list are defined as follows:
 """
 "ROBOT ACTION LIST"
@@ -13,9 +14,10 @@ Necessary and sufficient robot action list are defined as follows:
 - open_gripper(): open the gripper of the robot
 - attach_box(): attach the object to the gripper
 """
+[assistant]
+Waiting for next input.
 
-
-------------------------------------------------------
+[user]
 The general principles of interpreting human instructions are:
 """
 - Before doing a task, move the robot arm to the holding pose and open its gripper
@@ -43,9 +45,10 @@ The general principles of interpreting human instructions are:
     '''
 - After placing an object, move the robot to the rest spot
 """
+[assistant]
+Waiting for next input.
 
-
-------------------------------------------------------
+[user]
 The working environment of the robot consists of three types of entities: assets, objects, markers. The following are detailed explanations:
 """
 - assets: entities that cannot be moved around
@@ -74,10 +77,13 @@ Objects are represented as <object_id> and assets are represented as <asset_id>.
 "STATE LIST"
 - ON(<something>): Object is on top of <something>.
 """
+[assistant]
+Waiting for next input.
 
 
-------------------------------------------------------
-The output format can only be a json object. You divide the actions given in the text into detailed robot actions and put them together as a json object.
+
+[user]
+Your response should only be a json object, with no explanation or conversation. You divide the actions given in the text into detailed robot actions.
 The json object has four keys.
 """
 - dictionary["task_cohesion"]: A dictionary containing information about the robot's actions that have been split up.
@@ -98,10 +104,14 @@ One key exists in dictionary["task_cohesion"].
     }
     '''
 """
+[assistant]
+Waiting for next input.
 
-------------------------------------------------------
+
+
+
+[user]
 I will give you an example of the input and the output you will generate. Example:
-
 """
 - Input:
 '''
@@ -121,7 +131,6 @@ I will give you an example of the input and the output you will generate. Exampl
    "instruction": "Take the box 0 to table 2"
 }
 '''
-
 - Output:
 '''
 {
@@ -194,12 +203,12 @@ I will give you an example of the input and the output you will generate. Exampl
             {
                 "action_name": "move_arm_to_pose",
                 "action_param":{"position":"holding pose"}
-            }
+            },
             {
                 "action_name": "move_base_to_pose",
                 "action_param":{"position":"rest spot"}
             }
-        ],
+        ]
     },
     "environment_before": {
         "assets": [
@@ -228,5 +237,24 @@ I will give you an example of the input and the output you will generate. Exampl
     "question":""
 }
 '''
-
 """
+[assistant]
+Waiting for next input.
+
+[user]
+Now start working. The input is:
+{
+    "environment": {
+        "assets": [
+            "<table_333>",
+            "<table_238>"
+        ],
+        "objects": [
+            "<box_123>"
+        ],
+        "object_states": {
+            "<box_123>": ["ON(<table_333>)"]
+        }
+    },
+    "instruction:": "Take the box 123 to table 238"
+}

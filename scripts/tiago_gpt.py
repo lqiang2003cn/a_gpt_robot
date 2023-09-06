@@ -42,8 +42,8 @@ def call_gpt(in_json):
         ]
     }
     resp_msg = requests.post(api_base, headers=headers, json=data).json()['choices'][0]['message']['content']
-    print resp_msg
-    json_msg = json.loads(resp_msg, strict=True)
+    # print resp_msg
+    json_msg = json.loads(resp_msg, strict=False)
     time_str = time.strftime("%Y%m%d-%H%M%S")
     json_file_name = "../json_files/result_" + time_str + ".json"
     with open(json_file_name, 'w') as fp:

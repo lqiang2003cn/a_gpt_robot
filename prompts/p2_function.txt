@@ -1,0 +1,13 @@
+[user]
+Necessary and sufficient robot action list are defined as follows:
+"""
+move_base_to_pose(pose_str): move the robot to the pose specified by the argument pose_str
+move_arm_to_pose(pose_str): move the robot arm to the pose specified by the argument pose_str
+close_gripper(): close the gripper of the robot
+open_gripper(): open the gripper of the robot
+attach_box(): attach the object to the gripper
+"""
+-------------------------------------------------------
+The texts above are part of the overall instruction. Do not start working yet:
+[assistant]
+Waiting for next input.

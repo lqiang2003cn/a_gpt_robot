@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # call_service_func("move_arm_to_pose", {"pose_str": "above box tool pose"})
     # call_service_func("move_arm_to_pose", {"pose_str": "pick tool pose"})
     # call_service_func("close_gripper", {})
-    # call_service_func("attach_box", {})
+    # call_service_func("attach_object", {})
     # call_service_func("move_arm_to_pose", {"pose_str": "above box tool pose"})
     # call_service_func("move_base_to_pose", {"pose_str": "turn around"})
     # call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})

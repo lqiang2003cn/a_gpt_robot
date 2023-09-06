@@ -2,6 +2,11 @@
 unset all_proxy && unset ALL_PROXY
 set all_proxy && set ALL_PROXY
 catkin build --jobs 8 --cmake-args "-DCMAKE_BUILD_TYPE=Debug"
+prompt_load_order = ['prompt_role',
+                     'prompt_function',
+                     'prompt_environment',
+                     'prompt_output_format',
+                     'prompt_example']
 
 tiago_dual move_base configuration: pal_navigation_cfg_tiago
 

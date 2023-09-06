@@ -184,7 +184,7 @@ def open_gripper(trigger):
         print "Service call failed: %s" % e
 
 
-def attach_box(srv_request):
+def attach_object(srv_request):
     eef_link = move_group.get_end_effector_link()
     grasping_group = 'gripper_left'
     touch_links = robot.get_link_names(group=grasping_group)
@@ -199,7 +199,7 @@ def create_tiago_services():
     rospy.Service('move_arm_to_pose', MovePose, move_arm_to_pose)
     rospy.Service('close_gripper', Trigger, close_gripper)
     rospy.Service('open_gripper', Trigger, open_gripper)
-    rospy.Service('attach_box', MovePose, attach_box)
+    rospy.Service('attach_object', MovePose, attach_object)
     print "tiago services are ready"
     rospy.spin()
 

@@ -1,0 +1,110 @@
+[user]
+The general principle of interpreting human instructions are:
+"""
+- To take an object from one location another location, you need to pick it up from where it is and then place it on the table specified in the human instruction
+- To pick up an object, you need to do the following things in the correct sequence:
+    '''
+    - move the robot to the front of the table
+    - move the robot arm to the prepick pose of the object
+    - move the robot arm to the pick pose of the object
+    - close the robot's gripper
+    - attach the object to the gripper.
+    - move the robot arm to the prepick pose of the object
+    - move the robot to the turn around pose
+    - move the robot arm to the holding pose
+    '''
+- To place an object on a table, you need to do the following things in the correct sequence:
+    '''
+    - move the robot to the front of the table
+    - move the robot arm to the preplace pose of the table
+    - move the robot arm to the place pose of the table
+    - open the robot's gripper
+    - move the robot arm to the preplace pose of the table
+    - move the robot to the turn around pose
+    - move the robot arm to the holding pose
+    '''
+- After placing an object, move the robot to the rest spot
+"""
+
+I will give you some examples of the input and the output you will generate.
+Example 1:
+
+- Input:
+"""
+{
+  "assets": [
+    "<table_1>",
+    "<table_2>",
+  ],
+  "objects": [
+    "<cube_3>"
+  ],
+  "object_states": {
+    "<cube_3>": ["ON(<table_1>)"]
+  }
+}
+"instruction": "Take the cube 3 to the table 2"
+"""
+
+- Output:
+"""
+{task_cohesion": {
+        "task_sequence":[
+            "Walk(<book_293>)",
+            "Grab(<book_293>)",
+            "Walk(<kitchentable_231>)",
+            "Put(<book_293>, <kitchentable_231>)"
+        ]
+        "step_instructions": [
+            "Walk to the book",
+            "Grab the book",
+            "Walk to the table",
+            "Put the book on the table"
+        ]
+    },
+    "environment_after": {
+        "assets": [
+            "<kitchentable_231>",
+            "<bookshelf_250>",
+            "<floor_212>"
+        ],
+        "asset_states": {
+            "<bookshelf_250>": [
+            "ON(<floor_212>)"
+            ]
+        },
+        "objects": [
+            "<book_293>"
+        ],
+        "object_states": {
+            "<book_293>": [
+            "ON(<kitchentable_231>)"
+            ]
+        },
+        "asset_properties": {
+          "<kitchentable_231>": [
+            "NOT_OPENABLE"
+          ],
+          "<bookshelf_250>": [
+            "NOT_OPENABLE"
+          ],
+          "<floor_212>": [
+            "NOT_OPENABLE"
+          ]
+        },
+        "object_properties": {
+          "<book_293>": [
+            "IS_OPENABLE"
+          ]
+        }
+    },
+    "instruction_summary": "Take the book in the bookshelf and put it on top of the table"
+}
+"""
+
+
+
+-------------------------------------------------------
+The texts above are part of the overall instruction. Do not start working yet:
+[assistant]
+Waiting for next input.

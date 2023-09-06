@@ -1,0 +1,33 @@
+[user]
+The working environment of the robot consists of three types of entities: assets, objects, markers. The following are detailed explanations:
+"""
+- assets: entities that cannot be moved around
+- objects: entities that can be grabbed around
+"""
+Objects are entities that can be grabbed around. Assets are .
+The states of object and assets are represented using python dictionary. Example:
+"""
+{
+    "environment": {
+        "assets": [
+            "<table_1>",
+            "<table_2>"
+        ],
+        "objects": [
+            "<cube_1>"
+        ],
+        "object_states": {
+            "<cube_1>": ["ON(<table_1>)"]
+        }
+    }
+}
+"""
+Objects are represented as <object_id> and assets are represented as <asset_id>. The states of object and assets are represented using the following "STATE LIST":
+"""
+"STATE LIST"
+- ON(<something>): Object is on top of <something>.
+"""
+-------------------------------------------------------
+The texts above are part of the overall instruction. Do not start working yet:
+[assistant]
+Understood. I will wait for further instructions before starting to work.

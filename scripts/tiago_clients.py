@@ -24,26 +24,25 @@ def call_service_func(sn, args):
 
 
 if __name__ == "__main__":
+    call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
+    call_service_func("open_gripper", {})
+
+    call_service_func("move_base_to_pose", {"pose_str": "front of table 333"})
+    call_service_func("move_arm_to_pose", {"pose_str": "prepick pose of box 123"})
+    call_service_func("move_arm_to_pose", {"pose_str": "pick pose of box 123"})
+    call_service_func("close_gripper", {})
+    call_service_func("attach_object", {})
+    call_service_func("move_arm_to_pose", {"pose_str": "prepick pose of box 123"})
+    call_service_func("move_base_to_pose", {"pose_str": "turn around"})
+    call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
+
+    call_service_func("move_base_to_pose", {"pose_str": "front of table 238"})
+    call_service_func("move_arm_to_pose", {"pose_str": "preplace pose of table 238"})
+    call_service_func("move_arm_to_pose", {"pose_str": "place pose of table 238"})
+    call_service_func("open_gripper", {})
+    call_service_func("move_arm_to_pose", {"pose_str": "preplace pose of table 238"})
+    call_service_func("move_base_to_pose", {"pose_str": "turn around"})
+    call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
+    call_service_func("move_base_to_pose", {"pose_str": "rest spot"})
+
     # call_service_func("move_arm_to_pose_cartesian", {})
-
-    # call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
-    # call_service_func("open_gripper", {})
-    # call_service_func("move_base_to_pose", {"pose_str": "stock room table 333 front"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "above box tool pose"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "pick tool pose"})
-    # call_service_func("close_gripper", {})
-    # call_service_func("attach_object", {})
-    # call_service_func("move_arm_to_pose", {"pose_str": "above box tool pose"})
-    # call_service_func("move_base_to_pose", {"pose_str": "turn around"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
-
-    call_service_func("move_base_to_pose", {"pose_str": "office room table 238 front"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "above 238 tool pose"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "place 238 tool pose"})
-    # call_service_func("open_gripper", {})
-    # call_service_func("move_arm_to_pose", {"pose_str": "above 238 tool pose"})
-    # call_service_func("move_base_to_pose", {"pose_str": "turn around"})
-    # call_service_func("move_arm_to_pose", {"pose_str": "holding pose"})
-    # call_service_func("move_base_to_pose", {"pose_str": "rest spot"})
-
-

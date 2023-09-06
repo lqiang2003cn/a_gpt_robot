@@ -7,6 +7,17 @@ import rospy
 import tf
 from tf.transformations import translation_matrix, quaternion_matrix, quaternion_from_matrix, translation_from_matrix
 
+def call_service_func(sn, args):
+    rospy.wait_for_service(sn)
+    try:
+        if sn not in services:
+            services[sn] = roslibpy.Service(ros_client, sn, ros_client.get_service_type(sn))
+        req = roslibpy.ServiceRequest(args)
+        resp = services[sn].call(req)
+        rospy.sleep(2)
+        return resp
+    except Exception as e:
+        print("Service call failed: %s" % e)
 
 def get_pos_and_quat_from_matrix(obj_mat):
     pos = translation_from_matrix(obj_mat)

@@ -1,0 +1,132 @@
+I will give you an example of the input and the output you will generate. Example:
+
+"""
+- Input:
+'''
+{
+    "environment": {
+        "assets": [
+            "<table_1>",
+            "<table_2>"
+        ],
+        "objects": [
+            "<box_0>"
+        ],
+        "object_states": {
+            "<box_0>": ["ON(<table_1>)"]
+        }
+    },
+    "instruction:" {
+        "instruction": "Take the box 0 to table 2"
+    }
+}
+'''
+
+- Output:
+'''
+{
+    "task_cohesion": {
+        "task_sequence": [
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"pose_str":"holding pose"}
+            },
+            {
+                "action_name": "open_gripper",
+                "action_param":{}
+            },
+            {
+                "action_name": "move_base_to_pose",
+                "action_param":{"position":"front of table 2"}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"prepick pose of box 0"}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"pick pose of box 0"}
+            },
+            {
+                "action_name": "close_gripper",
+                "action_param":{}
+            },
+            {
+                "action_name": "attach_object",
+                "action_param":{}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"prepick pose of box 0"}
+            },
+            {
+                "action_name": "move_base_to_pose",
+                "action_param":{"position":"turn around"}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"holding pose"}
+            },
+            {
+                "action_name": "move_base_to_pose",
+                "action_param":{"position":"front of table 2"}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"preplace pose of table 2"}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"place pose of table 2"}
+            },
+            {
+                "action_name": "open_gripper",
+                "action_param":{}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"preplace pose of table 2"}
+            },
+            {
+                "action_name": "move_base_to_pose",
+                "action_param":{"position":"turn around"}
+            },
+            {
+                "action_name": "move_arm_to_pose",
+                "action_param":{"position":"holding pose"}
+            },
+            {
+                "action_name": "move_base_to_pose",
+                "action_param":{"position":"rest spot"}
+            }
+        ],
+    },
+    "environment_before": {
+        "assets": [
+            "<table_1>",
+            "<table_2>"
+        ],
+        "objects": [
+            "<box_0>"
+        ],
+        "object_states": {
+            "<box_0>": ["ON(<table_1>)"]
+        }
+    },
+    "environment_after": {
+        "assets": [
+            "<table_1>",
+            "<table_2>"
+        ],
+        "objects": [
+            "<box_0>"
+        ],
+        "object_states": {
+            "<box_0>": ["ON(<table_2>)"]
+        }
+    },
+    "question":""
+}
+'''
+
+"""

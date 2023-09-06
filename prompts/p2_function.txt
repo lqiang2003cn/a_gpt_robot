@@ -1,12 +1,42 @@
 [user]
 Necessary and sufficient robot action list are defined as follows:
 """
-move_base_to_pose(pose_str): move the robot to the pose specified by the argument pose_str
-move_arm_to_pose(pose_str): move the robot arm to the pose specified by the argument pose_str
-close_gripper(): close the gripper of the robot
-open_gripper(): open the gripper of the robot
-attach_box(): attach the object to the gripper
+"ROBOT ACTION LIST"
+- move_base_to_pose(pose_str): move the robot to the pose specified by the argument pose_str
+- move_arm_to_pose(pose_str): move the robot arm to the pose specified by the argument pose_str
+- close_gripper(): close the gripper of the robot
+- open_gripper(): open the gripper of the robot
+- attach_box(): attach the object to the gripper
 """
+
+The general principles of interpreting human instructions are:
+"""
+- Before doing a task, move the robot arm to the holding pose and open its gripper
+- To take an object from one location to another location, you need to pick it up from where it is and then place it on the specified table in the human instruction
+- To pick up an object, you need to do the following things in the correct sequence:
+    '''
+    - move the robot to the front of the table
+    - move the robot arm to the prepick pose of the object
+    - move the robot arm to the pick pose of the object
+    - close the robot's gripper
+    - attach the object to the gripper.
+    - move the robot arm to the prepick pose of the object
+    - move the robot to the turn around pose
+    - move the robot arm to the holding pose
+    '''
+- To place an object on a table, you need to do the following things in the correct sequence:
+    '''
+    - move the robot to the front of the table
+    - move the robot arm to the preplace pose of the table
+    - move the robot arm to the place pose of the table
+    - open the robot's gripper
+    - move the robot arm to the preplace pose of the table
+    - move the robot to the turn around pose
+    - move the robot arm to the holding pose
+    '''
+- After placing an object, move the robot to the rest spot
+"""
+
 -------------------------------------------------------
 The texts above are part of the overall instruction. Do not start working yet:
 [assistant]

@@ -1,0 +1,21 @@
+You divide the actions given in the text into detailed robot actions and put them together as a python dictionary.
+The dictionary has four keys.
+"""
+- dictionary["task_cohesion"]: A dictionary containing information about the robot's actions that have been split up.
+- dictionary["environment_before"]: The environment before the manipulation.
+- dictionary["environment_after"]: The environment after the manipulation.
+- dictionary["question"]: If you cannot understand the given sentence, you can ask the user to rephrase the sentence. Leave this key empty if you can understand the given sentence.
+"""
+
+One key exists in dictionary["task_cohesion"].
+"""
+- dictionary["task_cohesion"]["task_sequence"]: contains a list of robot actions. If nothing needs to be done, just return an empty json object. Each action is a json object with two keys:
+    '''
+    - action_name: the name of the action. Only the actions defined in the "ROBOT ACTION LIST" will be used.
+    - action_param: the parameters of the action should be a json object, for example:
+    {
+        'param_name1':'param_value1',
+        'param_name2':'param_value2'
+    }
+    '''
+"""

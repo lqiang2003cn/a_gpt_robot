@@ -41,7 +41,9 @@ def call_gpt(in_json):
             {"role": "user", "content": str(in_json)}
         ]
     }
-    resp_msg = requests.post(api_base, headers=headers, json=data).json()['choices'][0]['message']['content']
+    response_str = requests.post(api_base, headers=headers, json=data)
+    print response_str
+    resp_msg = response_str.json()['choices'][0]['message']['content']
     # print resp_msg
     json_msg = json.loads(resp_msg, strict=False)
     time_str = time.strftime("%Y%m%d-%H%M%S")
@@ -81,7 +83,7 @@ if __name__ == "__main__":
                 "table7"
             ]
         },
-        "command:": "I am Carl. I want some water"
+        "command:": "I want some water"
     }
     call_gpt(input_json)
 

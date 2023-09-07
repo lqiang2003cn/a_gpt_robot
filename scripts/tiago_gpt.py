@@ -81,7 +81,7 @@ if __name__ == "__main__":
                 "table7"
             ]
         },
-        "command:": "I am Alice. I am hungry"
+        "command:": "I am Carl. I need water"
     }
     call_gpt(input_json)
 

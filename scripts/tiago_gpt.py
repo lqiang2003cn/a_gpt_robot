@@ -31,7 +31,7 @@ def call_gpt(in_json):
     api_key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
     api_base = "https://api.chatanywhere.com.cn/v1/chat/completions"
     headers = {"Authorization": "Bearer " + api_key}
-    fp_prompt = os.path.join("", "../prompts/tiago_prompt_all.txt")
+    fp_prompt = os.path.join("", "../prompts/tiago_pick_and_place.txt")
     with open(fp_prompt) as f:
         sys_prompt = f.read()
     data = {
@@ -58,18 +58,75 @@ def call_gpt(in_json):
 if __name__ == "__main__":
     input_json = {
         "environment": {
-            "assets": [
-                "<table_333>",
-                "<table_238>"
-            ],
             "objects": [
-                "<box_123>"
+                "water",
+                "juice",
+                "cookie",
+                "bread"
             ],
-            "object_states": {
-                "<box_123>": ["ON(<table_333>)"]
-            }
+            "object_locations": [
+                "table1",
+                "table2",
+                "table3",
+                "table4"
+            ],
+            "commanders": [
+                "Alice",
+                "Bob",
+                "Carl"
+            ],
+            "commander_locations": [
+                "table5",
+                "table6",
+                "table7"
+            ]
         },
-        "instruction:": "Take the box 123 to table 238"
+        "command:": "I am Alice. I am hungry"
     }
-
     call_gpt(input_json)
+
+    # input_json = {
+    #     "environment": {
+    #         "assets": [
+    #             "<table_333>",
+    #             "<table_238>"
+    #         ],
+    #         "objects": [
+    #             "<box_123>"
+    #         ],
+    #         "object_states": {
+    #             "<box_123>": ["ON(<table_333>)"]
+    #         }
+    #     },
+    #     "instruction:": "Take the box 123 to table 238"
+    # }
+
+    # '''
+    # "environment": {
+    #     "objects": [
+    #         "water",
+    #         "juice",
+    #         "cookie",
+    #         "bread",
+    #
+    #     ],
+    #     "object_locations": [
+    #         "table1",
+    #         "table2",
+    #         "table3",
+    #         "table4",
+    #     ],
+    #     "commanders": [
+    #         "Alice",
+    #         "Bob",
+    #         "Carl",
+    #     ],
+    #     "commander_locations": [
+    #         "table5",
+    #         "table6",
+    #         "table7",
+    #     ],
+    # }
+    # '''
+
+

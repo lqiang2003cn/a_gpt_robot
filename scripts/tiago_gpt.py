@@ -42,10 +42,10 @@ def call_gpt(in_json):
         ]
     }
     response_str = requests.post(api_base, headers=headers, json=data)
-    print response_str
+    print response_str.text
     resp_msg = response_str.json()['choices'][0]['message']['content']
     # print resp_msg
-    json_msg = json.loads(resp_msg, strict=False)
+    json_msg = json.loads(resp_msg, strict=True)
     time_str = time.strftime("%Y%m%d-%H%M%S")
     json_file_name = "../json_files/result_" + time_str + ".json"
     with open(json_file_name, 'w') as fp:
@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 "table7"
             ]
         },
-        "command:": "I want some water"
+        "command:": "I am Bob. I want some water"
     }
     call_gpt(input_json)
 

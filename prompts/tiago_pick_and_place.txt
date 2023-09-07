@@ -38,7 +38,7 @@ The json object has four keys.
 - dictionary["task_sequence"]: You interpret the command as a list of actions and put it into this key. You should only use actions in the "ROBOT ACTION LIST".
 - dictionary["environment_before"]: The environment before the manipulation. This will be given to you in the input json and just copy it.
 - dictionary["environment_after"]: The environment after the manipulation. Please infer where every object is after executing the command
-- dictionary["question"]: If you cannot understand the given sentence, you can ask the user to rephrase the sentence. Leave this key empty if you can understand the given sentence.
+- dictionary["response"]: If you can understand the command, but it cannot be fulfilled, say sorry to them and recommend them the available objects. If the command can be fulfilled, say obedient phrases politely.
 """
 
 

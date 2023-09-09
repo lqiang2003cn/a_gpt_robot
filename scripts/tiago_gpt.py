@@ -31,7 +31,7 @@ def call_gpt(in_json):
     api_key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
     api_base = "https://api.chatanywhere.com.cn/v1/chat/completions"
     headers = {"Authorization": "Bearer " + api_key}
-    fp_prompt = os.path.join("", "../prompts/tiago_pick_and_place.txt")
+    fp_prompt = os.path.join("", "tiago_prompt_pickplace.txt")
     with open(fp_prompt) as f:
         sys_prompt = f.read()
     data = {
@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 "table7"
             ]
         },
-        "command:": "I am Bob. I want some water"
+        "command:": "I am Carl. I want some rice"
     }
     call_gpt(input_json)
 

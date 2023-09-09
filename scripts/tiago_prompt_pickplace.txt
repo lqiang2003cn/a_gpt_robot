@@ -32,7 +32,7 @@ The input is a json object with two keys:
             "table3",
             "table4"
         ],
-        "commanders": [
+        "commander": [
             "Alice",
             "Bob",
             "Carl"
@@ -44,7 +44,7 @@ The input is a json object with two keys:
         ]
     }
     '''
-- dictionary["command"]: the commander's command.
+- dictionary["command"]: the commander's command. It
 """
 
 
@@ -62,10 +62,9 @@ The json object has two keys.
 ----------- Steps
 The steps of interpreting a command is:
 """
-- before executing a command, always get the robot ready
-- the commander's name should be explicitly mentioned in the command, if not, ask in the "question" key
-- the commander's name should be in the list of commanders in the input json, if not, say you cannot provide service to her/him
+- the commander's name should be in the list of commanders in the input json, if not, ask the user to provide a different name
 - infer from the command what object the commander want, if the object is not in the list of objects in the input json, then say sorry to the commander and recommend available objects in the "question" key.
+- before executing a command, always get the robot ready
 - if the object is in the list, then you should go to the table where the object is on and pick it up
 - after picking it up, you should go to the commander's table and place the object on the table
 - when you are done, get ready and wait for next command

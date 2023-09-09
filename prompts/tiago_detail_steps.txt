@@ -14,9 +14,10 @@ Necessary and sufficient robot action list are defined as follows:
 """
 The general principles of interpreting human instructions are:
 """
+-
 - Before doing a task, move the robot arm to the holding pose and open its gripper
 - To take an object from one location to another location, you need to pick it up from where it is and then place it on the specified table in the human instruction
-- To pick up an object, you need to do the following things in the correct sequence:
+- To pick up an object, you need to do the following things in right order:
     '''
     - move the robot to the front of the table
     - move the robot arm to the prepick pose of the object
@@ -27,7 +28,7 @@ The general principles of interpreting human instructions are:
     - move the robot to the turn around pose
     - move the robot arm to the holding pose
     '''
-- To place an object on a table, you need to do the following things in the correct sequence:
+- To place an object on a table, you need to do the following things in right order:
     '''
     - move the robot to the front of the table
     - move the robot arm to the preplace pose of the table
@@ -42,7 +43,7 @@ The general principles of interpreting human instructions are:
 
 
 
-The working environment of the robot consists of three types of entities: assets, objects, markers. The following are detailed explanations:
+The working environment of the robot consists of two types of entities: assets, objects, markers. The following are detailed explanations:
 """
 - assets: entities that cannot be moved around
 - objects: entities that can be grabbed around
@@ -74,7 +75,7 @@ Objects are represented as <object_id> and assets are represented as <asset_id>.
 
 
 
-Just return a json object, with no explanation or conversation. You divide the actions given in the text into detailed robot actions.
+Just return a json object with double quotes, no explanation or conversation. You divide the actions given in the text into detailed robot actions.
 The json object has four keys.
 """
 - dictionary["task_sequence"]: contains a list of robot actions. Each action is a json object with two keys. Example:

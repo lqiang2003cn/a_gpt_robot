@@ -7,17 +7,6 @@ import rospy
 import tf
 from tf.transformations import translation_matrix, quaternion_matrix, quaternion_from_matrix, translation_from_matrix
 
-def call_service_func(sn, args):
-    rospy.wait_for_service(sn)
-    try:
-        if sn not in services:
-            services[sn] = roslibpy.Service(ros_client, sn, ros_client.get_service_type(sn))
-        req = roslibpy.ServiceRequest(args)
-        resp = services[sn].call(req)
-        rospy.sleep(2)
-        return resp
-    except Exception as e:
-        print("Service call failed: %s" % e)
 
 def get_pos_and_quat_from_matrix(obj_mat):
     pos = translation_from_matrix(obj_mat)
@@ -146,3 +135,15 @@ def center_to_tool(center_pose, center_to_tool_transform):
     # prepick_to_tool_mat = get_matrix_from_pose(gripper_center_to_tool_pos, gripper_center_to_tool_quat)
     # tool_frame_mat = np.dot(prepick_frame_mat, prepick_to_tool_mat)
     # return get_pose_from_matrix(tool_frame_mat)
+
+# def call_service_func(sn, args):
+#     rospy.wait_for_service(sn)
+#     try:
+#         if sn not in services:
+#             services[sn] = roslibpy.Service(ros_client, sn, ros_client.get_service_type(sn))
+#         req = roslibpy.ServiceRequest(args)
+#         resp = services[sn].call(req)
+#         rospy.sleep(2)
+#         return resp
+#     except Exception as e:
+#         print("Service call failed: %s" % e)

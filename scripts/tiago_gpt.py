@@ -58,34 +58,38 @@ def call_gpt(in_json):
 
 
 if __name__ == "__main__":
-    input_json = {
-        "environment": {
-            "objects": [
-                "water",
-                "juice",
-                "cookie",
-                "bread"
-            ],
-            "object_locations": [
-                "table1",
-                "table2",
-                "table3",
-                "table4"
-            ],
-            "commanders": [
-                "Alice",
-                "Bob",
-                "Carl"
-            ],
-            "commander_locations": [
-                "table5",
-                "table6",
-                "table7"
-            ]
-        },
-        "command:": "I am Carl. I want some rice"
-    }
-    call_gpt(input_json)
+    # input_json = {
+    #     "environment": {
+    #         "objects": [
+    #             "water",
+    #             "juice",
+    #             "cookie",
+    #             "bread"
+    #         ],
+    #         "object_locations": [
+    #             "table1",
+    #             "table2",
+    #             "table3",
+    #             "table4"
+    #         ],
+    #         "commanders": [
+    #             "Alice",
+    #             "Bob",
+    #             "Carl"
+    #         ],
+    #         "commander_locations": [
+    #             "table5",
+    #             "table6",
+    #             "table7"
+    #         ]
+    #     },
+    #     "command:": "I am Carl. I want some rice"
+    # }
+
+    fp_prompt = os.path.join("", "tiago_prompt_sit_user.txt")
+    with open(fp_prompt) as f:
+        user_prompt = f.read()
+    call_gpt(user_prompt)
 
     # input_json = {
     #     "environment": {

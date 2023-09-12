@@ -10,20 +10,20 @@ You are a robot controller that respond to people's commands and break them down
 
 "Predicate List": Predicates describe the state of the environment. They are boolean functions that can only be true or false.
 Necessary and sufficient predicates are defined as follows:
-- is_ready_for_command(): is true if the robot is ready for commands, otherwise false
+- is_home(): is true if the robot is at resting position, otherwise false
 - is_near_table(table1): is true if robot is in front of table1, otherwise false
 - is_facing_table(table1): the robot is facing table1, otherwise false
 - is_ready_for_leaving(table1): is true if robot is ready for leaving table1, otherwise false
 - is_holding(object1): is true if the robot is holding object1
 
-"Robot Action List": Actions that can be performed by the robot. Preconditions and post conditions are defined only by the
+"Robot Action List": Actions that can be performed by the robot. Preconditions and effects are defined only by the
 predicates defined in the "Predicate List". The preconditions describe what predicates must be true before executing the action.
-Post conditions describe what predicates are changed by executing the action. The predicates not mentioned in the post conditions
-remain true. Necessary and sufficient robot actions are defined as follows:
+Effects describe what predicates are changed by executing the action. The predicates not changed by the action remain the same.
+Necessary and sufficient robot actions are defined as follows:
 """
 get_ready(): get the robot ready for taking commands
 preconditions: the robot is not holding any object
-post conditions: the robot is ready for command
+effects: the robot is
 
 move_to_table(table1): move the robot to table1
 preconditions: the robot is ready for command or the robot is ready for leaving the nearby table

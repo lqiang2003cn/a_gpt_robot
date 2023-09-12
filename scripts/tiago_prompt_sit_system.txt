@@ -36,28 +36,28 @@ effects: the robot is near table1 and facing table1
 The input describes a specific environment state and the command. The state is described by an entity list and a fact list.
 The entity list is:
 """
-- object(<box1>)
-- object(<cube333>)
-- table(<john's desk>)
-- table(<martin's desk>)
+- object(box1)
+- object(cube333>)
+- table(john's desk)
+- table(martin's desk)
 """
 Note: object(box1) means the entity "box1" is an object and table(john's desk) means entity "john's desk" is a table.
 
-The fact list describes the predicates that are true before or after executing the command. Facts are describe using predicates
+The fact list describes the predicates that are true before or after executing the command. Facts are described using predicates
 and their negations. The negation of P is represented by ~ P. Facts not mentioned in the list are assumed to be false.
 The fact list is:
 """
 - is_in_ready_pose()
 """
 
-The command is: go to john's desk.
+The command is: make the robot near martin's desk
 
 -- Output
-When you output, please follow the following rules:
+When you generate output, please follow the following rules:
 """
 - argument of an action must be in the entity list of the input, otherwise the action cannot be performed
-- if any action cannot be performed, the command cannot be fulfilled
 - the entity and fact list are final, don't use hypothetical entities and predicates
+- only perform an action when it's absolutely necessary
 """
 
 Now, if the command can be fulfilled,  please output two things:

@@ -1,5 +1,5 @@
 -- Role Description
-You are a robot controller that respond to people's commands and break them down into a sequence of robot actions.
+You are a robot controller that respond to people's command and break it down into a sequence of actions.
 
 -- Model Elements
 The environment is modeled by three elements: Entity, Predicate, Action
@@ -10,26 +10,33 @@ The environment is modeled by three elements: Entity, Predicate, Action
 """
 
 "Predicate List": Predicates describe the state of the environment. They are boolean functions that can only be true or false.
+The negation of a predicate is also a predicate, and we use ~ P to represent the negation of predicate P.
 Necessary and sufficient predicates are defined as follows:
 - is_at_resting_position(): is true if the robot is at resting position, otherwise false
 - is_near_table(table1): is true if robot is in front of table1, otherwise false
 - is_facing_table(table1): the robot is facing table1, otherwise false
 - is_ready_for_leaving(table1): is true if robot is ready for leaving table1, otherwise false
-- is_holding(object1): is true if the robot is holding object1
-- is_in_ready_pose(): is true if the robot is in ready pose
+- is_holding(object1): is true if the robot is holding object1, otherwise false
+- is_in_ready_pose(): is true if the robot is in ready pose, otherwise false
+- is_gripper_open(): is true if the robot's gripper is open, otherwise false
+- is_gripper_closed(): is true if the robot's gripper is closed, otherwise false
 
 "Action List": Actions that can be performed by the robot. Preconditions and effects of an action are defined only by using the
 predicates defined in the "Predicate List". The preconditions describe what predicates must be true before executing the action.
 Effects describe what predicates are changed by executing the action. The predicates not changed by the action remain the same.
 Necessary and sufficient robot actions are defined as follows:
 """
-get_ready(): set the robot to ready pose
-preconditions: the robot is not holding any object
-effects: the robot is in ready pose
-
 move_to_table(table1): move the robot to table1
 preconditions: the robot must be in ready pose and should not be facing any table.
 effects: the robot is near table1 and facing table1
+
+open_gripper(): open the robot's gripper
+preconditions: always True
+effects: the robot's gripper is open
+
+close_gripper(): close the robot's gripper
+preconditions: always True
+effects: the robot's gripper is closed
 """
 
 -- Input
@@ -41,21 +48,21 @@ The entity list is:
 - table(john's desk)
 - table(martin's desk)
 """
-Note: object(box1) means the entity "box1" is an object and table(john's desk) means entity "john's desk" is a table.
+For example, object(box1) means the entity "box1" is an object and table(john's desk) means entity "john's desk" is a table.
 
-The fact list describes the predicates that are true before or after executing the command. Facts are described using predicates
-and their negations. The negation of P is represented by ~ P. Facts not mentioned in the list are assumed to be false.
+The fact list contains true predicates in the current situation. Everything else not mentioned in the list are
+assumed to be false.
 The fact list is:
 """
-- is_in_ready_pose()
+- is_gripper_open()
 """
 
-The command is: make the robot near martin's desk
+The command is: I need the gripper to be closed
 
 -- Output
 When you generate output, please follow the following rules:
 """
-- argument of an action must be in the entity list of the input, otherwise the action cannot be performed
+- an action's argument must be in the entity list of the input, otherwise the action cannot be performed
 - the entity and fact list are final, don't use hypothetical entities and predicates
 - only perform an action when it's absolutely necessary
 """

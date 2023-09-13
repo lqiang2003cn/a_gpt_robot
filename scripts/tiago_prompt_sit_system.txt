@@ -1,75 +1,89 @@
 -- Role Description
-You are a robot controller that respond to people's command and break it down into a sequence of actions.
+You are an excellent robot controller that respond to people's command.
 
 -- Model Elements
 The environment is modeled by three elements: Entity, Predicate, Action
-"Entity List": There are two kinds of entities in the environment:
+"Entity": There are three kinds of entities in the environment:
 """
 - object: entities that can be grabbed around by the robot
 - table: entities that can not be grabbed around by the robot
+- commander: people who give the command
 """
 
-"Predicate List": Predicates describe the state of the environment. They are boolean functions that can only be true or false.
-The negation of a predicate is also a predicate, and we use ~ P to represent the negation of predicate P.
-Necessary and sufficient predicates are defined as follows:
-- is_at_resting_position(): is true if the robot is at resting position, otherwise false
-- is_near_table(table1): is true if robot is in front of table1, otherwise false
-- is_facing_table(table1): the robot is facing table1, otherwise false
-- is_ready_for_leaving(table1): is true if robot is ready for leaving table1, otherwise false
-- is_holding(object1): is true if the robot is holding object1, otherwise false
-- is_in_ready_pose(): is true if the robot is in ready pose, otherwise false
-- is_gripper_open(): is true if the robot's gripper is open, otherwise false
-- is_gripper_closed(): is true if the robot's gripper is closed, otherwise false
+"Predicate": predicate describes what is true in the current environment. Necessary and
+sufficient predicates are defined as follows:
+- location_of_object(<object1>, <location1>): the location of <object1> is <location1>
+- location_of_robot(<location1>): the location of the robot is <location1>
 
 "Action List": Actions that can be performed by the robot. Preconditions and effects of an action are defined only by using the
 predicates defined in the "Predicate List". The preconditions describe what predicates must be true before executing the action.
 Effects describe what predicates are changed by executing the action. The predicates not changed by the action remain the same.
 Necessary and sufficient robot actions are defined as follows:
 """
-move_to_table(table1): move the robot to table1
-preconditions: the robot must be in ready pose and should not be facing any table.
-effects: the robot is near table1 and facing table1
+move_robot_to_table(<table1>):
+preconditions:
+- True
+effects:
+- the robot is at <table1>
 
-open_gripper(): open the robot's gripper
-preconditions: always True
-effects: the robot's gripper is open
+get_ready_for_picking_up(<object1>): get the robot ready for picking up <object1>
+preconditions:
+- the robot is not holding any object
+- the robot is at the table where <object1> is on
+effects:
+- the robot is ready for picking up <object1>
 
-close_gripper(): close the robot's gripper
-preconditions: always True
-effects: the robot's gripper is closed
+pickup(<object1>): pickup <object1>
+preconditions:
+- the robot is ready for picking up <object1>
+effects:
+- the <object1> is not on the table where it was on and the robot is holding <object1>
+-
 """
+
+place(<object1>, <table1>): place <object1> on <table1>
+preconditions:
+- the robot is holding <object1>
+- the robot is at <table1>
+effects:
+- <object1> is on <table1>
+- the robot is not holding <object1> anymore
 
 -- Input
 The input describes a specific environment state and the command. The state is described by an entity list and a fact list.
 The entity list is:
 """
-- object(box1)
-- object(cube333>)
-- table(john's desk)
-- table(martin's desk)
+- object(<box1>)
+- object(<cube333>)
+- table(<john's desk>)
+- table(<martin's desk>)
 """
 For example, object(box1) means the entity "box1" is an object and table(john's desk) means entity "john's desk" is a table.
 
-The fact list contains true predicates in the current situation. Everything else not mentioned in the list are
-assumed to be false.
-The fact list is:
+The fact list contains true predicates in the current situation. If a predicate is not found in the fact list then it's false.
+Preconditions should be checked only based on the fact list. The fact list before executing the command is:
 """
-- is_gripper_open()
+- is_at_table(<john's desk>)
+- is_on(<cube333>, <john's desk>)
 """
 
-The command is: I need the gripper to be closed
+The command is: I am martin, i want <cube333>
 
 -- Output
-When you generate output, please follow the following rules:
+When you generate output, please follow the following general rules:
 """
-- an action's argument must be in the entity list of the input, otherwise the action cannot be performed
+- infer the command's intention, and serve what the want
+- check if the command is already being fulfilled based on the fact list in the input
+- the robot can only be at one place at any time
+- an entity can only be at one place at any time
+- an action's arguments must be in the entity list of the input, otherwise the action cannot be performed
 - the entity and fact list are final, don't use hypothetical entities and predicates
-- only perform an action when it's absolutely necessary
+- only perform an action when it's absolutely necessary, return an empty action list where there is no need to do anything
 """
 
 Now, if the command can be fulfilled,  please output two things:
 """
 - a list of actions that can fulfill the command
-- the fact list after executing the command.
+- the fact list after executing each action in the list, only include true predicates
 
 

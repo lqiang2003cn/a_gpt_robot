@@ -15,7 +15,7 @@ sufficient predicates are defined as follows:
 - location_of_object(<object1>, <location1>): the location of <object1> is at <location1>. Objects can only be at one location at the same time.
 - location_of_robot(<location1>): the robot is located at <location1>. The robot can only be at one location at the same time.
 - status_of_robot(<status1>): the status of robot is <status1>. The robot can only be at one status at the same time.
-- gripper_in_state(<state1>): the robot's gripper is in <state1> state. The gripper can only be at one state at the same time.
+- gripper_in_state(<state1>): the robot's gripper is in <state1> state. The robot's gripper can only be at one state at the same time.
 
 
 "Action List": Actions that can be performed by the robot. Each action has a set of preconditions which should all be satisfied
@@ -24,10 +24,10 @@ Facts not changed by the effect remains true. Necessary and sufficient robot act
 """
 move_robot_to_table(<table1>):
 preconditions:
-- the robot should not already be at the location of <table1>
-- the robot should be in the <ready for leaving> status
+- the robot's location should not be <table1>
+- the robot's status should be <ready for leaving>
 effects:
-- the robot's location is at the table <table1>
+- the robot's location is at table <table1>
 - the robot's status is <ready for working>
 
 -- Input

@@ -1,0 +1,109 @@
+***********************************************************************************************
+$location_of_robot = get the location of the robot from the fact list
+$status_of_robot = get the status of the robot from the fact list
+if $location_of_robot is <table1>:
+    return false
+if $status_of_robot is <working>:
+    return false
+return true
+***********************************************************************************************
+
+-- Role Description
+You are an excellent robot controller that respond to people's command.
+
+-- Model Elements
+The environment is modeled by three elements: Entity, Predicate, Action
+"Entity": There are three kinds of entities in the environment:
+"""
+- object: entities that can be grabbed around by the robot
+- table: entities that can not be grabbed around by the robot
+- commander: people who give the command
+"""
+
+"Predicate": predicate describes what is true in the current environment. Necessary and
+sufficient predicates are defined as follows:
+- location_of_object(<object1>, <location1>): the location of <object1> is <location1>
+- location_of_robot(<location1>): the location of the robot is <location1>
+- gripper_in_state(<state1>): the robot's gripper is in state <state1>
+- pose_of_robot(<pose1>): the robot is in <pose1> pose
+
+"Action List": Actions that can be performed by the robot. Preconditions and effects of an action are defined only by using the
+predicates defined in the "Predicate List". The preconditions describe what predicates must be true before executing the action.
+Effects describe what predicates are changed by executing the action. The predicates not changed by the action remain the same.
+Necessary and sufficient robot actions are defined as follows:
+"""
+move_robot_to_table(<table1>):
+preconditions:
+- the robot's location is not <table1>
+effects:
+- the robot's location is <table1>
+
+get_ready_for_picking_up(<object1>): get the robot ready for picking up <object1>
+preconditions:
+- the gripper is in open state
+- the robot is at the table where <object1> is on
+effects:
+- the robot is ready for picking up <object1>
+
+pickup(<object1>): pickup <object1>
+preconditions:
+- the robot is ready for picking up <object1>
+effects:
+- the <object1> is not on the table where it was on and the robot is holding <object1>
+-
+"""
+
+place(<object1>, <table1>): place <object1> on <table1>
+preconditions:
+- the robot is holding <object1>
+- the robot is at <table1>
+effects:
+- <object1> is on <table1>
+- the robot is not holding <object1> anymore
+
+-- Input
+The input describes a specific environment state and the command. The state is described by an entity list and a fact list.
+The entity list is:
+"""
+- object(<box1>)
+- object(<cube333>)
+- table(<john's desk>)
+- table(<martin's desk>)
+"""
+For example, object(box1) means the entity "box1" is an object and table(john's desk) means entity "john's desk" is a table.
+
+The fact list contains true predicates in the current situation. If a predicate is not found in the fact list then it's false.
+Preconditions should be checked only based on the fact list. The fact list before executing the command is:
+"""
+- is_at_table(<john's desk>)
+- is_on(<cube333>, <john's desk>)
+"""
+
+The command is: I am martin, i want <cube333>
+
+-- Output
+When you generate output, please follow the following general rules:
+"""
+- infer the command's intention, and serve what the want
+- check if the command is already being fulfilled based on the fact list in the input
+- the robot can only be at one place at any time
+- an entity can only be at one place at any time
+- an action's arguments must be in the entity list of the input, otherwise the action cannot be performed
+- the entity and fact list are final, don't use hypothetical entities and predicates
+- only perform an action when it's absolutely necessary, return an empty action list where there is no need to do anything
+"""
+
+Now, if the command can be fulfilled,  please output two things:
+"""
+- a list of actions that can fulfill the command
+- the fact list after executing each action in the list, only include true predicates
+
+
+
+
+Now, The environment state is:
+"""
+-- is_at_resting_position()
+"""
+The command is: get ready for taking commands.
+Please output a list of actions that can fulfill the command and the environment state after executing the command.

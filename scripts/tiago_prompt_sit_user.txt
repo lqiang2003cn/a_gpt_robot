@@ -1,6 +1,0 @@
-Now, The environment state is:
-"""
--- is_at_resting_position()
-"""
-The command is: get ready for taking commands.
-Please output a list of actions that can fulfill the command and the environment state after executing the command.

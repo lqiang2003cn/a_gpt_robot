@@ -30,6 +30,16 @@ effects:
 - the robot's location is at table <table1>
 - the robot's status is <ready for working>
 
+move_robot_to_table(<table1>):
+preconditions:
+- the robot's location should not be <table1>
+- the robot's status should be <ready for leaving> or <resting>
+effects:
+- the robot's location is at table <table1>
+- the robot's status is <ready for working>
+
+"""
+
 -- Input
 The input describes a specific environment state and the command. The state is described by an entity list and a fact list.
 The entity list is:

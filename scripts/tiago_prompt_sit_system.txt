@@ -25,7 +25,7 @@ Facts not changed by the effect remains true. Necessary and sufficient robot act
 move_robot_to_table(<table1>):
 preconditions:
 - the robot's location should not be <table1>
-- the robot's status should be <ready for leaving>
+- the robot's status should be <ready for leaving> or <resting>
 effects:
 - the robot's location is at table <table1>
 - the robot's status is <ready for working>
@@ -44,7 +44,7 @@ For example, object(box1) means the entity "box1" is an object and table(john's 
 The fact list contains facts in the current environment and what is not explicitly mentioned in the fact list is assumed to be false.
 The current fact list the command is:
 """
-- location_of_robot(<martin's desk>)
+- location_of_robot(<resting place>)
 - status_of_robot(<ready for leaving>)
 """
 

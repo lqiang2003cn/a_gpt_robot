@@ -1,4 +1,21 @@
 ***********************************************************************************************
+- location_of_object(arg1, arg2): the location of object arg1 is at arg2. Objects can only be at one location at the same time.
+- location_of_robot(arg1): the robot is located at arg1. The robot can only be at one location at the same time.
+- status_of_robot(arg1): the status of robot is arg1. The robot can only be at one status at the same time.
+- gripper_in_state(arg1): the robot's gripper is in arg1 state. The robot's gripper can only be at one state at the same time.
+
+
+- first analyze the command and figure out what's the desired working environment
+- check each basic action's effects and figure out which action can lead to the desired working environment
+- if the action's preconditions can be satisfied by the current working environment, then you are done
+- if not, try to execute other basic actions to satisfy the action's preconditions
+Try to bind each action's argument to different entities to be creative in your work.
+
+Remember, even
+though an action's preconditions cannot be satisfied in the current environment, they might be satisfied after executing another
+action, whose preconditions can be satisfied in the current environment.
+
+***********************************************************************************************
 $location_of_robot = get the location of the robot from the fact list
 $status_of_robot = get the status of the robot from the fact list
 if $location_of_robot is <table1>:

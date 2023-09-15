@@ -1,70 +1,75 @@
 -- Role Description
-You are an excellent robot controller that respond to people's command.
+You are an excellent interpreter of human commands. Given a command and information about the working environment, you should
+try to compose a legitimate action list using basic actions defined in the "Basic Action List".
+
 
 -- Model Elements
-The environment is modeled by three elements: Entity, Predicate, Action
-"Entity List": There are three kinds of entities in the environment:
+The environment is modeled by three elements: Entity, Function, Action
+"Entity List": Necessary and sufficient entities are:
 """
 - object: entities that can be grabbed around by the robot
 - table: entities that can not be grabbed around by the robot
 - commander: people who give the command
 """
 
-"Predicate List": predicate describes facts in the current environment, i.e. what is true in the current environment. Necessary and
-sufficient predicates are defined as follows:
-- location_of_object(<object1>, <location1>): the location of <object1> is at <location1>. Objects can only be at one location at the same time.
-- location_of_robot(<location1>): the robot is located at <location1>. The robot can only be at one location at the same time.
-- status_of_robot(<status1>): the status of robot is <status1>. The robot can only be at one status at the same time.
-- gripper_in_state(<state1>): the robot's gripper is in <state1> state. The robot's gripper can only be at one state at the same time.
+"Function List": A function take a list of arguments and return a single value. Necessary and sufficient functions are defined
+as follows:
+- location_of(arg1): returns the location of entity arg1. An entity can only be at one location at the same time
+- status_of(arg1): returns the status of entity arg1. An entity can only be in one status at the same time
 
 
-"Action List": Actions that can be performed by the robot. Each action has a set of preconditions which should all be satisfied
-for the action to be executable. An action's effect describe what predicates are changed by executing the action.
-Facts not changed by the effect remains true. Necessary and sufficient robot actions are defined as follows:
+"Basic Action List": Basic actions that can be performed by the robot. Each action takes a list of arguments which can be
+referred in the specification of preconditions and effects. Preconditions are constructed using functions and logical operators and
+should be checked against the current situation. Executing an action can change the current situation and produce a new situation.
+The facts changed by an action are described in the action's effects. Facts not changed by the action remains true.
+Necessary and sufficient actions are defined as follows:
 """
-move_robot_to_table(<table1>):
+- move_robot_to_table(arg1): move the robot to table arg1.
 preconditions:
-- the robot's location should not be <table1>
-- the robot's status should be <ready for leaving> or <resting>
+location_of_robot != arg1
+status_of_robot == "ready for leaving" or status_of_robot == "resting"
 effects:
-- the robot's location is at table <table1>
-- the robot's status is <ready for working>
+location_of_robot == arg1
+status_of_robot == "ready for working"
 
-move_robot_to_table(<table1>):
+- get_ready_for_leaving_table(arg1): change the robot's status to "ready for leaving table"
 preconditions:
-- the robot's location should not be <table1>
-- the robot's status should be <ready for leaving> or <resting>
+location_of_robot == arg1
 effects:
-- the robot's location is at table <table1>
-- the robot's status is <ready for working>
-
+status_of_robot == "ready for leaving"
 """
 
 -- Input
-The input describes a specific environment state and the command. The state is described by an entity list and a fact list.
+The input describes a specific situation and the command. The situation is described by an entity list and a fact list.
 The entity list is:
 """
-- object(<box1>)
-- object(<cube333>)
-- table(<john's desk>)
-- table(<martin's desk>)
+- object("box1")
+- object("cube333")
+- table("john's desk")
+- table("martin's desk")
 """
 For example, object(box1) means the entity "box1" is an object and table(john's desk) means entity "john's desk" is a table.
 
-The fact list contains facts in the current environment and what is not explicitly mentioned in the fact list is assumed to be false.
-The current fact list the command is:
+The situation describes what is true in the current environment and what is not explicitly mentioned is assumed to be false.
+The current situation is:
 """
-- location_of_robot(<resting place>)
-- status_of_robot(<ready for leaving>)
+- location_of_robot == "martin's desk"
+- status_of_robot == "ready for working"
 """
 
-The command is: move to <john's desk>
+The command is: move to "martin's desk"
 
 -- Output
-if the command can be fulfilled,  please output three things:
+Please output the following things:
 """
-- a list of actions that can fulfill the command
-- show the evaluation result of each action's preconditions
-- the fact list after executing each action in the list, remove duplicates and don't add any additional facts
+- a legitimate action list that can fulfill the command. If there is no need to execute any action, then return an empty list.
+A legitimate action list must satisfy the following conditions:
+    """
+    1) the first action's preconditions must be true according to the fact list given by the input
+    2) an action's preconditions must be true according to the fact list after executing all the previous actions
+    """
+    Note: at any time, before executing any action, check whether the fact list demanded by the command has already been fulfilled.
+    If it is, don't add any actions to the list anymore.
+- the fact list after executing the list of actions
 """
 

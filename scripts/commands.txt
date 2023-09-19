@@ -1,3 +1,7 @@
+################################ tiago aruco ################################
+roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true end_effector:=pal-gripper world:=tutorial_office gzpose:="-x -3.5 -y -0.85 -z 0 -R 0 -P 0 -Y -3.0"
+roslaunch tiago_aruco_demo detector.launch
+
 ################################ frequently used ################################
 unset all_proxy && unset ALL_PROXY
 set all_proxy && set ALL_PROXY

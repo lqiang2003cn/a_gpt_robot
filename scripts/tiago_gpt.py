@@ -36,6 +36,7 @@ def call_gpt(in_json):
         sys_prompt = f.read()
     data = {
         'model': 'gpt-3.5-turbo',
+        'temperature': 0.0,
         'messages': [
             {"role": "system", "content": sys_prompt},
             {"role": "user", "content": str(in_json)}

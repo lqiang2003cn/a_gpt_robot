@@ -1,18 +1,23 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 
 from __future__ import print_function
 
+import json
 import os
+import re
+import ast
+
 
 global_configs = {
-    "dir_system": "block_pmt_01_system.txt",
+    "system": "block_pmt_01_system.txt",
     "prompt_load_order": [
         "block_pmt_02_role.txt",
         "block_pmt_03_function.txt",
         "block_pmt_04_env.txt",
         "block_pmt_05_output.txt",
         "block_pmt_06_example.txt"
-    ]
+    ],
+    "query": "block_pmt_07_query.txt",
 }
 
 
@@ -27,13 +32,13 @@ class ChatGPT:
         self.query = ''
         self.instruction = ''
         # load prompt file
-        fp_system = os.path.join(configs["dir_system"])
+        fp_system = os.path.join(configs["system"])
         with open(fp_system) as f:
             data = f.read()
         self.system_message = {"role": "system", "content": data}
 
         for prompt_name in configs["prompt_load_order"]:
-            fp_prompt = os.path.join(dir_prompt, prompt_name + '.txt')
+            fp_prompt = os.path.join(prompt_name)
             with open(fp_prompt) as f:
                 data = f.read()
             data_spilit = re.split(r'\[user\]\n|\[assistant\]\n', data)
@@ -45,7 +50,7 @@ class ChatGPT:
                     self.messages.append({"sender": "user", "text": item})
                 else:
                     self.messages.append({"sender": "assistant", "text": item})
-        fp_query = os.path.join(dir_query, 'query.txt')
+        fp_query = os.path.join(configs["query"])
         with open(fp_query) as f:
             self.query = f.read()
 
@@ -59,7 +64,7 @@ class ChatGPT:
         for message in prompt:
             prompt_content += message["content"]
 
-        print('prompt length: ' + str(len(enc.encode(prompt_content))))
+        print('prompt length: ' + str(len(ast.encode(prompt_content))))
         if len(enc.encode(prompt_content)) > self.max_token_length - \
                 self.max_completion_length:
             print('prompt too long. truncated.')

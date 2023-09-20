@@ -28,14 +28,12 @@ import rospy
 
 
 def call_gpt(in_json):
-    api_key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
-    api_base = "https://api.chatanywhere.com.cn/v1/chat/completions"
     headers = {"Authorization": "Bearer " + api_key}
     fp_prompt = os.path.join("", "tiago_prompt_pickplace.txt")
     with open(fp_prompt) as f:
         sys_prompt = f.read()
     data = {
-        'model': 'gpt-3.5-turbo',
+        'model': 'gpt-3.5-turbo-16k',
         'temperature': 0.0,
         'messages': [
             {"role": "system", "content": sys_prompt},

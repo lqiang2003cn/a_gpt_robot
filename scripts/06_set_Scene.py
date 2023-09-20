@@ -34,7 +34,6 @@ if __name__ == "__main__":
     # rospy.init_node('Set_Scene')
     # import requests
     #
-    # key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
     # headers = {"Authorization": f"Bearer {key}"}
     # data = {
     #     'model': 'gpt-3.5-turbo',
@@ -43,8 +42,6 @@ if __name__ == "__main__":
     # print(requests.post("https://api.chatanywhere.com.cn/v1/chat/completions", headers=headers, json=data).json())
 
     # try:
-    #     openai.api_key = "sk-hreYr15pupx3kkOd3R8X8D7Qt0V88Mni2XvuNM8awFkg0ruU"
-    #     openai.api_base = "https://api.chatanywhere.com.cn"
     #     response = openai.ChatCompletion.create(
     #         model="gpt-3.5-turbo",
     #         messages=[{"role": "user", "content": "hello world"}]

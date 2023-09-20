@@ -3,10 +3,19 @@
 import math
 
 import numpy as np
+import requests
 import rospy
 import tf
 from tf.transformations import translation_matrix, quaternion_matrix, quaternion_from_matrix, translation_from_matrix
 
+
+def get_token_count(prompt):
+    api_base = "http://localhost:8080/prompt_len"
+    json = {
+        "prompt": prompt
+    }
+    response_json = requests.post(api_base, headers={"Content-Type": "application/json"}, json=json).json()
+    print response_json["token_count"]
 
 def get_pos_and_quat_from_matrix(obj_mat):
     pos = translation_from_matrix(obj_mat)

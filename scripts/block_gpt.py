@@ -139,15 +139,15 @@ class ChatGPT:
 
 if __name__ == "__main__":
     global_configs = {
-        "system": "block_pmt_01_system.txt",
+        "system": "block_p01_system.txt",
         "prompt_load_order": [
-            "block_pmt_02_role.txt",
-            "block_pmt_03_function.txt",
-            "block_pmt_04_env.txt",
-            "block_pmt_05_output.txt",
-            "block_pmt_06_example.txt"
+            "block_p02_role.txt",
+            "block_p03_env.txt",
+            "block_p04_function.txt",
+            "block_p05_output.txt",
+            "block_p06_example.txt"
         ],
-        "query": "block_pmt_07_query.txt",
+        "query": "block_p07_query.txt",
     }
     gpt = ChatGPT(global_configs)
     dir_name = "out_task_planning_gpt-3.5-turbo-16k_temp=2.0"
@@ -156,22 +156,24 @@ if __name__ == "__main__":
     time_api_called = time.time() - waittime_sec
 
     input_json = {
-        "environment":{
-
+        "environment": {
+            "assets": [
+                "<Joy's table>",
+                "<Jack's table>",
+            ],
+            "blocks": [
+                "<block 658>"
+            ],
+            "states": {
+                "<block 658>": [
+                    "ON(<Jack's table>)"
+                ]
+            }
         },
-        "instructions":[
-
+        "instructions": [
+            "place block 658 on Joy's table"
         ],
-        "reference"
     }
-
-
-    instructions = scenario['instructions']
-    reference_program = scenario['program']
-    print("instructions(scenario_id={scenario_id}): {instructions[0]}")
-    current_env = {}
-    if not os.path.exists('./' + dir_name + '/' + scenario_name):
-        os.makedirs('./' + dir_name + '/' + scenario_name)
 
     # call until break
     while True:
@@ -180,7 +182,7 @@ if __name__ == "__main__":
         if current_time - time_api_called < waittime_sec:
             print("waiting for " + str(waittime_sec - (current_time - time_api_called)) + " seconds...")
             time.sleep(waittime_sec - (current_time - time_api_called))
-        text = gpt.generate(instructions[0], current_env, is_user_feedback=False)
+        text = gpt.generate(input_json["instructions"][0], input_json["environment"], is_user_feedback=False)
         time_api_called = time.time()
         if text is not None:
             break

@@ -1,0 +1,62 @@
+[user]
+I will give you some examples of the input and the output you will generate.
+Example 1:
+"""
+- Input:
+{
+    "environment":{
+        "assets": [
+            "<John's table>",
+            "<Martin's table>"
+        ],
+        "blocks": [
+            "<block 213>"
+        ],
+        "states": {
+            "<book_293>": [
+                "ON(<John's table>)"
+            ]
+        }
+    },
+    "instructions":[
+        "place book 293 on Martin's table"
+    ]
+}
+
+- Output:
+```python
+{
+    task_cohesion": {
+        "task_sequence":[
+            "MoveTo(<block 213>)",
+            "Pickup(<block 213>)",
+            "Place(<block 213>, <Martin's table>)",
+        ]
+        "step_instructions": [
+            "Move to block 213",
+            "Pickup block 213",
+            "Place block 213 on Martin's table"
+        ]
+    },
+    "environment_after": {
+        "assets": [
+            "<John's table>",
+            "<Martin's table>"
+        ],
+        "blocks": [
+            "<block 213>"
+        ],
+        "states": {
+            "<block 213>": [
+                "ON(<Martin's table>)"
+            ]
+        }
+    },
+    "instruction_summary": "Pick up block 213 and place it on Martin's table"
+}
+```
+"""
+-------------------------------------------------------
+The texts above are part of the overall instruction. Do not start working yet:
+[assistant]
+Waiting for next input.

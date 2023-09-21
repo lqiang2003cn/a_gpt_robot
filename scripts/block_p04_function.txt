@@ -1,0 +1,23 @@
+[user]
+Necessary and sufficient relations are defined as follows:
+
+Necessary and sufficient robot actions are defined as follows:
+"""
+"ROBOT ACTION LIST"
+
+MoveTo(box1): Move the robot's gripper to box1
+Preconditions: True
+Post conditions: The robot's gripper is above box1
+
+Pickup(box1): pick up box1
+Preconditions: The robot's gripper is above box1
+Post conditions: the robot is holding box1
+
+Place(box1, something1): place box1 on something1.
+Preconditions: The robot is holding box1 and something1 should be placeable
+Post conditions: box1 is on something1
+"""
+-------------------------------------------------------
+The texts above are part of the overall instruction. Do not start working yet:
+[assistant]
+Waiting for next input.

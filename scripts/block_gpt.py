@@ -113,7 +113,11 @@ class ChatGPT:
 
     def call_gpt(self, json_data):
         headers = {"Authorization": "Bearer " + self.credentials["api_key"]}
-        response = requests.post(self.credentials["api_base"], headers=headers, json=json_data).json()
+        response = requests.post(
+            self.credentials["api_base"],
+            headers=headers,
+            json=json_data
+        ).json()
         resp_text = response['choices'][0]['message']['content']
         return resp_text
 
@@ -131,40 +135,31 @@ if __name__ == "__main__":
         "query": "block_p07_query.txt",
     }
     gpt = ChatGPT(global_configs)
+
     input_json = {
         "environment": {
             "assets": [
-                "<Joy's table>",
-                "<Jack's table>",
+                "<table_777>",
+                "<floor_888>"
             ],
-            "blocks": [
-                "<block 658>"
+            "asset_states": {
+                "<table_111>": ["ON(<floor_888>)"]
+            },
+            "objects": [
+                "<block_001>",
+                "<block_009>"
             ],
-            "states": {
-                "<block 658>": [
-                    "ON(<Jack's table>)"
-                ]
+            "object_states": {
+                "<block_001>": ["ON(<table_111>)"],
+                "<block_009>": ["ON(<table_111>)"]
             }
         },
         "instructions": [
-            "place block 658 on Joy's table"
+            "place block 001 on top of block 009"
         ],
     }
 
-    max_call = 100
-
-    # call until break
-    while True:
-        json_dict = gpt.generate(input_json["instructions"][0], input_json["environment"], is_user_feedback=False)
-
-        if json_dict is not None:
-            break
-        else:
-            print("api call failed. retrying...")
-            format_error = "Your return cannot be interpreted as a valid json dictionary. Please reformat your response."
-            json_dict = gpt.generate(format_error, input_json["environment"], is_user_feedback=True)
-            break
-
+    json_dict = gpt.generate(input_json["instructions"][0], input_json["environment"], is_user_feedback=False)
     time_str = time.strftime("%Y%m%d-%H%M%S")
     json_file_name = "../json_files/result_" + time_str + ".json"
     with open(json_file_name, 'w') as fp:

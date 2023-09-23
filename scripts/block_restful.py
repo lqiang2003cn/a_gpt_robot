@@ -1,7 +1,7 @@
 import requests
 
 prompt = "hellow world c d"
-api_base = "http://localhost:8080/prompt_len"
+api_base = "http://192.168.50.66:8080/prompt_len"
 pdata = {
     "prompt": prompt
 }

@@ -6,20 +6,23 @@ Example 1:
 {
     "environment":{
         "assets": [
-            "<John's table>",
-            "<Martin's table>"
+            "<table_250>",
+            "<floor_212>"
         ],
-        "blocks": [
-            "<block 213>"
+        "asset_states": {
+            "<table_250>": ["ON(<floor_212>)"]
+        },
+        "objects": [
+            "<block_291>",
+            "<block_399>"
         ],
-        "states": {
-            "<block 213>": [
-                "ON(<John's table>)"
-            ]
+        "object_states": {
+            "<block_291>": ["ON(<table_250>)"],
+            "<block_399>": ["ON(<table_250>)"]
         }
-    },
+    }
     "instructions":[
-        "place block 213 on Martin's table"
+        "place block 399 on top of block 291"
     ]
 }
 
@@ -28,45 +31,51 @@ Example 1:
 {
     task_cohesion": {
         "task_sequence":[
-            "MoveTo(<block 213>)",
-            "Pickup(<block 213>)",
-            "Place(<block 213>, <Martin's table>)",
+            "MoveTo(<block 399>)",
+            "Pickup(<block 399>)",
+            "Place(<block 399>, <block 291>)",
         ]
         "step_instructions": [
-            "Move to block 213",
-            "Pickup block 213",
-            "Place block 213 on Martin's table"
+            "Move to block 399",
+            "Pickup block 399",
+            "Place block 399 on block 291"
         ]
     },
     "environment_before": {
         "assets": [
-            "<John's table>",
-            "<Martin's table>"
+            "<table_250>",
+            "<floor_212>"
         ],
-        "blocks": [
-            "<block 213>"
+        "asset_states": {
+            "<table_250>": ["ON(<floor_212>)"]
+        },
+        "objects": [
+            "<block_291>",
+            "<block_399>"
         ],
-        "states": {
-            "<block 213>": [
-                "ON(<John's table>)"
-            ]
+        "object_states": {
+            "<block_291>": ["ON(<table_250>)"],
+            "<block_399>": ["ON(<table_250>)"]
         }
     },
     "environment_after": {
         "assets": [
-            "<John's table>",
-            "<Martin's table>"
+            "<table_250>",
+            "<floor_212>"
         ],
-        "blocks": [
-            "<block 213>"
+        "asset_states": {
+            "<table_250>": ["ON(<floor_212>)"]
+        },
+        "objects": [
+            "<block_291>",
+            "<block_399>"
         ],
-        "states": {
-            "<block 213>": [
-                "ON(<Martin's table>)"
-            ]
+        "object_states": {
+            "<block_291>": ["ON(<table_250>)"],
+            "<block_399>": ["ON(<block_291>)"]
         }
     }
-    "instruction_summary": "Pick up block 213 and place it on Martin's table"
+    "instruction_summary": "Pick up block 399 and place it on top of block 291"
 }
 ```
 """

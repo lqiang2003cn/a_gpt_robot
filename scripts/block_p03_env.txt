@@ -1,28 +1,30 @@
 [user]
 Information about environments are given as python dictionary. Example:
 """
-"environment": {
-    "asset": [
-        "<table_111>"
-    ],
-    "blocks": [
-        "<block_111>",
-        "<block_112>"
-    ],
-    "states": {
-        "<block_291>": [
-            "ON(<table_111>)"
-        ]
+{
+    "environment":{
+        "assets": [
+            "<table_250>",
+            "<floor_212>"
+        ],
+        "asset_states": {
+            "<table_250>": ["ON(<floor_212>)"]
+        },
+        "objects": [
+            "<block_291>"
+        ],
+        "object_states": {
+            "<block_291>": ["ON(<table_250>)"]
+        }
     }
 }
 """
-Blocks and assets are represented as <something>. Blocks are entities that can be picked up
-and placed around by the robot. Assets are entities that cannot be moved around. If a block is on top of another block,
-then the bottom block is not placeable and the top block is placeable. An asset is always placeable. The states are
-represented using the following "STATE LIST":
+Objects are represented as <object_id> and assets are represented as <asset_id>.
+Object are entities that can be grabbed around. Assets are entities that cannot be moved around.
+The states of object and assets are represented using the following "STATE LIST":
 """
 "STATE LIST"
-- ON(<something>): Block is on top of <something>.
+- ON(<something>): Object is on top of <something>.
 """
 -------------------------------------------------------
 The texts above are part of the overall instruction. Do not start working yet:

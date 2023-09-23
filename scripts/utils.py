@@ -10,7 +10,7 @@ from tf.transformations import translation_matrix, quaternion_matrix, quaternion
 
 
 def get_token_count(prompt):
-    api_base = "http://localhost:8080/prompt_len"
+    api_base = "http://192.168.50.66:8080/prompt_len"
     json = {
         "prompt": prompt
     }

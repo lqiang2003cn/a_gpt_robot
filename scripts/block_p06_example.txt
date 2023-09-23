@@ -13,13 +13,13 @@ Example 1:
             "<block 213>"
         ],
         "states": {
-            "<book_293>": [
+            "<block 213>": [
                 "ON(<John's table>)"
             ]
         }
     },
     "instructions":[
-        "place book 293 on Martin's table"
+        "place block 213 on Martin's table"
     ]
 }
 
@@ -38,6 +38,20 @@ Example 1:
             "Place block 213 on Martin's table"
         ]
     },
+    "environment_before": {
+        "assets": [
+            "<John's table>",
+            "<Martin's table>"
+        ],
+        "blocks": [
+            "<block 213>"
+        ],
+        "states": {
+            "<block 213>": [
+                "ON(<John's table>)"
+            ]
+        }
+    },
     "environment_after": {
         "assets": [
             "<John's table>",
@@ -51,7 +65,7 @@ Example 1:
                 "ON(<Martin's table>)"
             ]
         }
-    },
+    }
     "instruction_summary": "Pick up block 213 and place it on Martin's table"
 }
 ```

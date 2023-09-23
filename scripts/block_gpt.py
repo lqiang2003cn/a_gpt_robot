@@ -50,14 +50,13 @@ class ChatGPT:
     def create_prompt(self):
         prompt = [self.system_message]
         for message in self.messages:
-            prompt.append(
-                {"role": message['sender'], "content": message['text']})
+            prompt.append({"role": message['sender'], "content": message['text']})
         prompt_content = ""
         for message in prompt:
             prompt_content += message["content"]
         prompt_len = ut.get_token_count(prompt_content)
         print('prompt length: ' + str(prompt_len))
-        if ut.get_token_count(prompt_content) > self.max_token_length - self.max_completion_length:
+        if prompt_len > self.max_token_length - self.max_completion_length:
             print('prompt too long. truncated.')
             # truncate the prompt by removing the oldest two messages
             self.messages = self.messages[2:]
@@ -82,59 +81,41 @@ class ChatGPT:
         else:
             text_base = self.query
             if text_base.find('[ENVIRONMENT]') != -1:
-                text_base = text_base.replace(
-                    '[ENVIRONMENT]', json.dumps(environment))
+                text_base = text_base.replace('[ENVIRONMENT]', json.dumps(environment))
             if text_base.find('[INSTRUCTION]') != -1:
                 text_base = text_base.replace('[INSTRUCTION]', message)
                 self.instruction = text_base
             self.messages.append({'sender': 'user', 'text': text_base})
 
-        response = self.get_gpt_response()
-        text_response = response['choices'][0].message.content
-        self.last_response_raw = text_response
-        self.messages.append(
-            {"sender": "assistant", "text": self.last_response_raw})
-        # analyze the response
-        self.last_response = text_response
-        self.last_response = self.extract_json_part(self.last_response)
-        self.last_response = self.last_response.replace("'", "\"")
-        try:
-            self.json_dict = json.loads(self.last_response, strict=False)
-            self.environment = self.json_dict["environment_after"]
-        except Exception as e:
-            print(e)
-            self.json_dict = None
-            return None
-        return self.json_dict
-
-    def get_gpt_response(self):
-        headers = {"Authorization": "Bearer " + self.credentials["api_key"]}
-        fp_prompt = os.path.join("", "tiago_prompt_pickplace.txt")
-        with open(fp_prompt) as fl:
-            sys_prompt = fl.read()
-        data = {
+        response_text = self.call_gpt({
             "model": "gpt-3.5-turbo-16k",
+            'messages': self.create_prompt(),
             "temperature": 2.0,
             "max_tokens": self.max_completion_length,
             "top_p": 0.5,
             "frequency_penalty": 0.0,
             "presence_penalty": 0.0,
-            'messages': [
-                {"role": "system", "content": sys_prompt},
-                {"role": "user", "content": str("hello")}
-            ]
-        }
-        response_str = requests.post(self.credentials["api_base"], headers=headers, json=data)
-        print(response_str.text)
-        resp_msg = response_str.json()['choices'][0]['message']['content']
-        # print resp_msg
-        json_msg = json.loads(resp_msg, strict=True)
-        return json_msg
+        })
+        self.last_response_raw = response_text
+        self.messages.append({"sender": "assistant", "text": self.last_response_raw})
+        # analyze the response
+        self.last_response = response_text
+        self.last_response = self.extract_json_part(self.last_response)
+        # self.last_response = self.last_response.replace("'", "\"")
+        try:
+            self.json_dict = json.loads(self.last_response, strict=False)
+            self.environment = self.json_dict["environment_after"]
+        except BaseException as e:
+            print(e)
+            self.json_dict = None
+            return None
+        return self.json_dict
 
-        # time_str = time.strftime("%Y%m%d-%H%M%S")
-        # json_file_name = "../json_files/result_" + time_str + ".json"
-        # with open(json_file_name, 'w') as fp:
-        #     json.dump(json_msg, fp)
+    def call_gpt(self, json_data):
+        headers = {"Authorization": "Bearer " + self.credentials["api_key"]}
+        response = requests.post(self.credentials["api_base"], headers=headers, json=json_data).json()
+        resp_text = response['choices'][0]['message']['content']
+        return resp_text
 
 
 if __name__ == "__main__":
@@ -150,11 +131,6 @@ if __name__ == "__main__":
         "query": "block_p07_query.txt",
     }
     gpt = ChatGPT(global_configs)
-    dir_name = "out_task_planning_gpt-3.5-turbo-16k_temp=2.0"
-    waittime_sec = 30
-    max_trial = 5
-    time_api_called = time.time() - waittime_sec
-
     input_json = {
         "environment": {
             "assets": [
@@ -175,27 +151,21 @@ if __name__ == "__main__":
         ],
     }
 
+    max_call = 100
+
     # call until break
     while True:
-        # if api is called within 60 seconds, wait
-        current_time = time.time()
-        if current_time - time_api_called < waittime_sec:
-            print("waiting for " + str(waittime_sec - (current_time - time_api_called)) + " seconds...")
-            time.sleep(waittime_sec - (current_time - time_api_called))
-        text = gpt.generate(input_json["instructions"][0], input_json["environment"], is_user_feedback=False)
-        time_api_called = time.time()
-        if text is not None:
+        json_dict = gpt.generate(input_json["instructions"][0], input_json["environment"], is_user_feedback=False)
+
+        if json_dict is not None:
             break
         else:
             print("api call failed. retrying...")
-            current_time = time.time()
-            if current_time - time_api_called < waittime_sec:
-                print("waiting for " + str(waittime_sec - (current_time - time_api_called)) + " seconds...")
-                time.sleep(waittime_sec - (current_time - time_api_called))
-
             format_error = "Your return cannot be interpreted as a valid json dictionary. Please reformat your response."
-            text = gpt.generate(format_error, current_time, is_user_feedback=True)
+            json_dict = gpt.generate(format_error, input_json["environment"], is_user_feedback=True)
             break
-    print(text)
 
-    print("c")
+    time_str = time.strftime("%Y%m%d-%H%M%S")
+    json_file_name = "../json_files/result_" + time_str + ".json"
+    with open(json_file_name, 'w') as fp:
+        json.dump(json_dict, fp)

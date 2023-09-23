@@ -15,7 +15,8 @@ def get_token_count(prompt):
         "prompt": prompt
     }
     response_json = requests.post(api_base, headers={"Content-Type": "application/json"}, json=json).json()
-    print response_json["token_count"]
+    return response_json["token_count"]
+
 
 def get_pos_and_quat_from_matrix(obj_mat):
     pos = translation_from_matrix(obj_mat)

@@ -155,7 +155,7 @@ if __name__ == "__main__":
             }
         },
         "instructions": [
-            "place block 001 on top of block 009"
+            "put block 001 on top of block 009"
         ],
     }
 

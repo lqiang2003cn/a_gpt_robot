@@ -79,6 +79,91 @@ Example 1:
 }
 ```
 """
+
+
+Example 2:
+"""
+- Input:
+{
+    "environment":{
+        "assets": [
+            "<table_250>",
+            "<floor_212>"
+        ],
+        "asset_states": {
+            "<table_250>": ["ON(<floor_212>)"]
+        },
+        "objects": [
+            "<block_291>",
+            "<block_399>"
+        ],
+        "object_states": {
+            "<block_291>": ["ON(<block_399>)"],
+            "<block_399>": ["ON(<table_250>)"]
+        }
+    }
+    "instructions":[
+        "place block 399 on top of block 291"
+    ]
+}
+
+- Output:
+```python
+{
+    task_cohesion": {
+        "task_sequence":[
+            "MoveTo(<block_291>)",
+            "Pickup(<block_291>)",
+            "Place(<block_291>, <table_250>)",
+            "Pickup(<block_399>)",
+            "Place(<block_399>, <block_291>)",
+        ]
+        "step_instructions": [
+            "Move to block 291",
+            "Pickup block 291",
+            "Place block 291 on table 250",
+            "Pick up block 399",
+            "Place block 399 on block 291"
+        ]
+    },
+    "environment_before": {
+        "assets": [
+            "<table_250>",
+            "<floor_212>"
+        ],
+        "asset_states": {
+            "<table_250>": ["ON(<floor_212>)"]
+        },
+        "objects": [
+            "<block_291>",
+            "<block_399>"
+        ],
+        "object_states": {
+            "<block_291>": ["ON(<block_399>)"],
+            "<block_399>": ["ON(<table_250>)"]
+        }
+    },
+    "environment_after": {
+        "assets": [
+            "<table_250>",
+            "<floor_212>"
+        ],
+        "asset_states": {
+            "<table_250>": ["ON(<floor_212>)"]
+        },
+        "objects": [
+            "<block_291>",
+            "<block_399>"
+        ],
+        "object_states": {
+            "<block_291>": ["ON(<table_250>)"],
+            "<block_399>": ["ON(<block_291>)"]
+        }
+    }
+    "instruction_summary": "Pick up block 399 and place it on top of block 291"
+}
+```
+"""
 -------------------------------------------------------
 The texts above are part of the overall instruction. Do not start working yet:
 [assistant]

@@ -6,16 +6,14 @@ Necessary and sufficient robot actions are defined as follows:
 "ROBOT ACTION LIST"
 
 MoveTo(<obj1>): Move the robot's gripper to <obj1>
-Preconditions: True
-Post conditions: The robot's gripper is above <obj1>
 
 Pickup(<obj1>): pick up <obj1>
-Preconditions: The robot's gripper is above <obj1>
+Preconditions: The robot is not holding anything and nothing should be on top of <obj1>
 Post conditions: the robot is holding <obj1>
 
 Place(<obj1>, <obj2>): place <obj1> on top of <obj2>
 Preconditions: The robot is holding <obj1>
-Post conditions: after executing the action Place(<obj1>,<obj2>), <obj1> is on top of <obj2>, not the other way around
+Post conditions: <obj1> is on top of <obj2>
 """
 -------------------------------------------------------
 The texts above are part of the overall instruction. Do not start working yet:

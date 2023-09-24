@@ -150,12 +150,12 @@ if __name__ == "__main__":
                 "<block_009>"
             ],
             "object_states": {
-                "<block_001>": ["ON(<table_111>)"],
+                "<block_001>": ["ON(<block_009>)"],
                 "<block_009>": ["ON(<table_111>)"]
             }
         },
         "instructions": [
-            "put block 001 on top of block 009"
+            "put block 009 on top of block 001"
         ],
     }
 

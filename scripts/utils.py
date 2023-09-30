@@ -8,6 +8,16 @@ import rospy
 import tf
 from tf.transformations import translation_matrix, quaternion_matrix, quaternion_from_matrix, translation_from_matrix
 
+api_base = "http://localhost:8081/"
+
+
+def post_json_no_proxy(method, json):
+    api_full = api_base + method
+    session = requests.Session()
+    session.trust_env = False
+    response = session.post(api_full, headers={"Content-Type": "application/json"}, json=json)
+    return response
+
 
 def get_token_count(prompt):
     api_base = "http://192.168.50.66:8080/prompt_len"

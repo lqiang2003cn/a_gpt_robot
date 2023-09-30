@@ -10,17 +10,13 @@ from sensor_msgs.msg import Image
 import utils
 
 
-class NumpyEncoder(json.JSONEncoder):
-    """ Special json encoder for numpy types """
-
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        elif isinstance(obj, np.floating):
-            return float(obj)
-        elif isinstance(obj, np.ndarray):
+def default(obj):
+    if type(obj).__module__ == np.__name__:
+        if isinstance(obj, np.ndarray):
             return obj.tolist()
-        return json.JSONEncoder.default(self, obj)
+        else:
+            return obj.item()
+    raise TypeError('Unknown type:', type(obj))
 
 
 class Nodo(object):
@@ -30,7 +26,7 @@ class Nodo(object):
         self.texts = None
         self.br = CvBridge()
         # Node cycle rate (in Hz).
-        self.loop_rate = rospy.Rate(1)
+        self.loop_rate = rospy.Rate(1.0)
 
         # Publishers
         self.pub = rospy.Publisher('imagetimer', Image, queue_size=10)
@@ -42,22 +38,20 @@ class Nodo(object):
         self.image = self.br.imgmsg_to_cv2(msg)
 
     def request_owl_vit(self):
-        pj = {
-            "prompt": "hello"
-        }
-        response = utils.post_json_no_proxy("prompt_len", pj)
-        # response_json = requests.post(api_base, headers={"Content-Type": "application/json"}, json=json)
-        print "c"
+        while self.image is None:
+            print "waiting for image"
+            self.loop_rate.sleep()
 
-        # api = 'http://192.168.50.96:8080/owl_vit'
-        # headers = {'Content-type': 'application/json'}
-        # payload = {"image": json.dumps(self.image, cls=NumpyEncoder), "texts": self.texts}
-        # response = requests.post(api, json=payload, headers=headers)
-        # try:
-        #     data = response.json()
-        #     print(data)
-        # except requests.exceptions.RequestException:
-        #     print(response.text)
+        json_data = {
+            "image": self.image.tolist(),
+            "texts": self.texts
+        }
+        response = utils.post_json_no_proxy("owl_vit", json_data)
+        try:
+            data = response.json()
+            print(data)
+        except requests.exceptions.RequestException:
+            print(response.text)
 
     def start(self):
         rospy.loginfo("Timing images")

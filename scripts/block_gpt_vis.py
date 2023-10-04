@@ -67,5 +67,5 @@ class Nodo(object):
 if __name__ == '__main__':
     rospy.init_node("image_vis", anonymous=True)
     my_node = Nodo()
-    my_node.texts = ["red block"]
+    my_node.texts = ["white surface", "red surface"]
     my_node.request_owl_vit()
